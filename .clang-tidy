@@ -1,0 +1,53 @@
+# .clang-tidy — static analysis / linting for C++/CUDA.
+#
+# TECH_STACK names clang-tidy. Checks chosen to catch real bugs (bugprone-*,
+# cppcoreguidelines subset, performance-*) and to enforce the ARCHITECTURE.md
+# naming conventions: functions PascalCase, variables snake_case, macros
+# UPPER_CASE.
+#
+# Notes:
+#  * Run against compile_commands.json (CMAKE_EXPORT_COMPILE_COMMANDS=ON).
+#  * .cu device code is only partially analyzable by clang-tidy; treat findings
+#    in host code as authoritative and kernel findings as advisory.
+#  * constexpr-constant casing is intentionally NOT enforced: the codebase uses
+#    Google-style k-prefixed constants (kDefaultBlockSize) which coexist with
+#    ARCHITECTURE's UPPER_CASE macro constants (WARP_SIZE). Revisit if desired.
+
+Checks: >
+  -*,
+  bugprone-*,
+  performance-*,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-use-using,
+  readability-identifier-naming,
+  readability-braces-around-statements,
+  cppcoreguidelines-pro-type-member-init,
+  cppcoreguidelines-narrowing-conversions,
+  -bugprone-easily-swappable-parameters
+
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*(include|src|tests|benchmarks)/.*\.(hpp|h|cuh)$'
+FormatStyle: file
+
+CheckOptions:
+  - key: readability-identifier-naming.FunctionCase
+    value: CamelCase
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: _
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case

@@ -1,0 +1,93 @@
+{
+  "context": {
+    "date": "2026-06-06T13:55:18+08:00",
+    "host_name": "YANG",
+    "executable": "./benchmarks/bench_vector_add",
+    "num_cpus": 32,
+    "mhz_per_cpu": 2419,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 49152,
+        "num_sharing": 2
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 2097152,
+        "num_sharing": 2
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 37748736,
+        "num_sharing": 32
+      }
+    ],
+    "load_avg": [0,0,0],
+    "library_version": "v1.9.0",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  },
+  "benchmarks": [
+    {
+      "name": "BM_VectorAdd/65536/manual_time",
+      "family_index": 0,
+      "per_family_instance_index": 0,
+      "run_name": "BM_VectorAdd/65536/manual_time",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 81968,
+      "real_time": 9.4995941587474827e+03,
+      "cpu_time": 2.1239411645398205e+06,
+      "time_unit": "ns",
+      "GFLOPS": 5.8608029199815794e+00,
+      "bandwidth_GBs": 7.0329635039778964e+01,
+      "pct_peak_bw": 2.7469080052407111e+01
+    },
+    {
+      "name": "BM_VectorAdd/1048576/manual_time",
+      "family_index": 0,
+      "per_family_instance_index": 1,
+      "run_name": "BM_VectorAdd/1048576/manual_time",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 71191,
+      "real_time": 9.9608202469156968e+03,
+      "cpu_time": 1.7072804247727946e+06,
+      "time_unit": "ns",
+      "GFLOPS": 1.0862917541607649e+02,
+      "bandwidth_GBs": 1.3035501049929180e+03,
+      "pct_peak_bw": 5.0913561781063231e+02
+    },
+    {
+      "name": "BM_VectorAdd/16777216/manual_time",
+      "family_index": 0,
+      "per_family_instance_index": 2,
+      "run_name": "BM_VectorAdd/16777216/manual_time",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 765,
+      "real_time": 9.1887340631360258e+05,
+      "cpu_time": 6.2208740669281013e+07,
+      "time_unit": "ns",
+      "GFLOPS": 1.8359182188500533e+01,
+      "bandwidth_GBs": 2.2031018626200640e+02,
+      "pct_peak_bw": 8.6047910519781283e+01
+    }
+  ]
+}

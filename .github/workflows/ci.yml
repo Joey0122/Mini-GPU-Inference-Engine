@@ -1,0 +1,103 @@
+# .github/workflows/ci.yml
+#
+# Continuous integration for the Mini GPU Inference Engine.
+#
+# IMPORTANT — the GPU honesty constraint (see ARCHITECTURE.md CI section and the
+# Phase 0 review): GitHub-hosted runners have NO NVIDIA GPU. They can install
+# the CUDA toolkit and *compile* CUDA code, but cannot *run* any kernel. So CI is
+# split into two honest jobs:
+#
+#   build            -> configure + compile everything (CUDA included) on a
+#                       Windows runner with the CUDA toolkit + MSVC. Proves the
+#                       code compiles for sm_89.
+#   host-tests       -> run ONLY the GPU-less tests (ctest -L cpu): CPU
+#                       reference + tolerance utilities. These need no device.
+#
+# GPU unit tests (ctest -L gpu) and PyTorch validation are intentionally NOT run
+# here; they run locally or on a future self-hosted GPU runner. Pretending CI
+# validates kernels on a GPU it doesn't have would violate the project's
+# "reproducibility before claims" principle.
+
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    name: Build (Windows, CUDA + MSVC)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CUDA Toolkit
+        uses: Jimver/cuda-toolkit@v0.2.19
+        with:
+          cuda: "12.5.0"
+          method: network
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G "Ninja"
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CUDA_ARCHITECTURES=89
+          -DMGIE_BUILD_TESTS=ON
+          -DMGIE_BUILD_BENCHMARKS=ON
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload build tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-windows
+          path: build/
+          retention-days: 3
+
+  host-tests:
+    name: Host tests (no GPU)
+    needs: build
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CUDA Toolkit
+        uses: Jimver/cuda-toolkit@v0.2.19
+        with:
+          cuda: "12.5.0"
+          method: network
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G "Ninja"
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CUDA_ARCHITECTURES=89
+          -DMGIE_BUILD_TESTS=ON
+          -DMGIE_BUILD_BENCHMARKS=OFF
+
+      - name: Build host tests
+        run: cmake --build build --config Release --target mgie_reference_tests
+
+      - name: Run CPU-only tests
+        working-directory: build
+        run: ctest -L cpu --output-on-failure
+
+  # Placeholder for the future self-hosted GPU job. Disabled until a runner with
+  # an RTX-class GPU is registered. Enable by setting `if: ${{ true }}` and
+  # tagging a self-hosted runner with the `gpu` label.
+  gpu-tests:
+    name: GPU tests (self-hosted, disabled)
+    if: ${{ false }}
+    runs-on: [self-hosted, gpu]
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure + build
+        run: |
+          cmake -S . -B build -G "Ninja" -DCMAKE_CUDA_ARCHITECTURES=89
+          cmake --build build
+      - name: Run GPU tests
+        working-directory: build
+        run: ctest -L gpu --output-on-failure
