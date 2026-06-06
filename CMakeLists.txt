@@ -4,11 +4,17 @@
 # Phase 0: stand up a CMake project that compiles a CUDA target, links the
 # common/runtime libraries, and wires tests + benchmarks behind options.
 #
-# Toolchain (per PROJECT constraints): Windows 11, CUDA 12.x, Visual Studio 2022
-# host compiler (MSVC, required by nvcc on Windows), C++17, RTX 4070 Laptop
-# (compute capability 8.9).
+# Active environment: WSL2 Ubuntu, GCC 13, CUDA 12.4, RTX 4070 Laptop (sm_89).
+# Host compiler MUST be gcc-13; nvcc 12.x does not support GCC > 13.
+# Use: cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/wsl2-gcc13.cmake
 
 cmake_minimum_required(VERSION 3.24)  # native CMAKE_CUDA_ARCHITECTURES, FetchContent
+
+# Must be set BEFORE project() — CMake's CUDA language init reads this variable
+# during the project() call. Setting it after has no effect.
+if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+  set(CMAKE_CUDA_ARCHITECTURES 89)
+endif()
 
 project(mini_gpu_inference_engine
   VERSION 0.1.0
@@ -29,12 +35,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Default build type when not set by a multi-config generator.
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-endif()
-
-# ---- Target GPU architecture ----------------------------------------------
-# RTX 4070 Laptop = Ada Lovelace = compute capability 8.9.
-if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-  set(CMAKE_CUDA_ARCHITECTURES 89)
 endif()
 
 # ---- Options ---------------------------------------------------------------

@@ -1,47 +1,42 @@
-# Toolchain Setup — Windows 11 + CUDA 12.x + Visual Studio 2022
+# Toolchain Setup — WSL2 Ubuntu + CUDA 12.4 + GCC 13
 
-This project targets Windows 11 with an RTX 4070 Laptop (compute capability
+This project targets WSL2 Ubuntu with an RTX 4070 Laptop (compute capability
 8.9). Follow these steps once; afterward the CMake build in the root
 [README](../README.md) works end-to-end.
 
-> Why MSVC and not MinGW/GCC: on Windows, `nvcc` only supports the Microsoft
-> C++ compiler (`cl.exe`) as its host compiler. A MinGW g++ on PATH will not
-> work as the CUDA host compiler — this is the most common Phase 0 setup
-> failure.
+> **Migration note:** The original scaffolding assumed Windows 11 / MSVC /
+> Visual Studio 2022. The active development environment is now WSL2 Ubuntu.
 
-## 1. Visual Studio 2022 (C++ toolchain)
+> **Host compiler constraint:** nvcc 12.x only supports GCC ≤ 13 as the CUDA
+> host compiler. GCC 15 (the Ubuntu system default) must NOT be used — it causes
+> ABI mismatches at link time. Always build via the provided toolchain file.
 
-Install **Visual Studio 2022** (Community is fine) with the
-**"Desktop development with C++"** workload. This provides `cl.exe`, the
-Windows SDK, and the "x64 Native Tools Command Prompt for VS 2022" that puts
-the compiler on PATH.
+## 1. CUDA Toolkit 12.x (Linux)
 
-Verify:
-```powershell
-# In "x64 Native Tools Command Prompt for VS 2022"
-cl
+Verify your WSL2 install has nvcc:
+```bash
+nvcc --version      # should report release 12.x
+nvidia-smi          # should list the RTX 4070 Laptop
 ```
 
-## 2. CUDA Toolkit 12.x
+If not present, install the CUDA Toolkit for Ubuntu from NVIDIA's package repos.
 
-Download and install the CUDA Toolkit 12.x for Windows from NVIDIA. Install it
-**after** Visual Studio so the installer can register the MSBuild/VS
-integration.
+## 2. GCC 13
+
+```bash
+sudo apt install gcc-13 g++-13
+```
 
 Verify:
-```powershell
-nvcc --version      # should report release 12.x
-nvidia-smi          # should list the RTX 4070 Laptop and the driver version
+```bash
+g++-13 --version
 ```
 
 ## 3. CMake ≥ 3.24 and Ninja
 
-Install CMake (≥ 3.24) and Ninja. Both are commonly bundled with the VS
-installer's CMake component, or install standalone.
-
-Verify:
-```powershell
-cmake --version
+```bash
+sudo apt install cmake ninja-build
+cmake --version    # ≥ 3.24
 ninja --version
 ```
 
@@ -50,35 +45,37 @@ ninja --version
 PyTorch is used solely to generate reference outputs the C++ tests diff
 against — it is never linked into the engine.
 
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r scripts/requirements.txt
 ```
 
-A CPU-only PyTorch build is sufficient for reference generation; a CUDA build
-only speeds it up.
-
 ## 5. (Optional) clang-format / clang-tidy
 
-For local formatting/linting (also part of CI later). Install LLVM for Windows
-to get `clang-format` and `clang-tidy`, or use the versions bundled with VS.
+```bash
+sudo apt install clang-format clang-tidy
+```
 
 ## 6. (Optional) Nsight tools
 
 Nsight Compute and Nsight Systems ship with the CUDA Toolkit installer. They
-are required starting in Phase 1 for the profiling reports — install them now
-so they're ready.
+are required starting in Phase 1 for the profiling reports.
 
 ## Verifying the whole chain
 
-```powershell
-python scripts/device_query.py          # driver-level check (no build needed)
-cmake -S . -B build -G "Ninja" -DCMAKE_CUDA_ARCHITECTURES=89
+```bash
+source .venv/bin/activate
+python3 scripts/device_query.py          # driver-level check (no build needed)
+
+cmake -S . -B build -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/wsl2-gcc13.cmake
 cmake --build build
-build\mgie_app.exe                       # device info + vector_add smoke test
+
+./build/mgie_app                          # device info + vector_add smoke test
 ctest --test-dir build --output-on-failure
+./build/benchmarks/bench_vector_add
 ```
 
-If `mgie_app.exe` prints the GPU name and "vector_add smoke test PASSED", the
+If `mgie_app` prints the GPU name and "vector_add smoke test PASSED", the
 Phase 0 toolchain is fully operational.

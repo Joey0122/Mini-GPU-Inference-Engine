@@ -1,14 +1,15 @@
 # scripts/requirements.txt
 #
-# Python dependencies for the validation + plotting tooling. Kept separate from
-# the C++ build so the toolchain pieces install independently.
+# Python dependencies for the validation + plotting tooling.
 #
-# torch is CPU-only here by default — references can be generated on CPU; a CUDA
-# torch build is optional and only speeds up reference generation. Install with:
-#   python -m venv .venv && .venv\Scripts\activate
+# Setup:
+#   python3 -m venv .venv
+#   source .venv/bin/activate
 #   pip install -r scripts/requirements.txt
+#
+# Use the project-local .venv — do not rely on system or user-level installs.
 
 numpy>=1.26
-torch>=2.2          # PyTorch reference outputs (IMPLEMENTATION_RULES Rule 8)
+torch>=2.2 --index-url https://download.pytorch.org/whl/cu130
 matplotlib>=3.8     # benchmark plots (optional but recommended)
 safetensors>=0.4    # Phase 5: load GPT-2 Small HuggingFace weights

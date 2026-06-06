@@ -1,15 +1,22 @@
 # TECH_STACK.md
 
-Target environment: **Windows 11**, **RTX 4070 Laptop** (Ada Lovelace,
-compute capability **8.9**), 8 GB VRAM.
+Target hardware: **RTX 4070 Laptop** (Ada Lovelace, compute capability **8.9**),
+8 GB VRAM.
+
+> **Migration note:** The original scaffolding was authored assuming Windows 11
+> and the MSVC host compiler (Visual Studio 2022).  Active development has moved
+> to **WSL2 Ubuntu** with GCC.  All build artifacts and CI targets have been
+> verified against the Linux toolchain; no CMake changes were required.
+
+---
 
 ## Language
 - C++17
-- CUDA 12.x
+- CUDA 12.4
 
 ## Host compiler
-- Visual Studio 2022 (MSVC) — **required** as the `nvcc` host compiler on
-  Windows. MinGW/GCC is not supported by `nvcc` on Windows.
+- GCC 13 / g++-13 (WSL2 Ubuntu) — selected automatically by CMake when
+  `CMAKE_CUDA_COMPILER=/usr/bin/nvcc`.
 
 ## Build
 - CMake (>= 3.24)
@@ -29,10 +36,20 @@ compute capability **8.9**), 8 GB VRAM.
   PROJECT_SPEC).
 
 ## Validation
-- Python 3.10+ (3.11 recommended)
-- PyTorch — reference outputs only; never linked into the engine
+- Python 3.x (project `.venv` — see below)
+- PyTorch 2.12.0+cu130 — reference outputs only; never linked into the engine
 - numpy
 - safetensors — GPT-2 Small weight loading (Phase 5)
+
+## Python environment
+- Location: `.venv/` inside the repository root
+- Activation: `source .venv/bin/activate`
+- Install: `pip install -r scripts/requirements.txt`
+- The project `.venv` is the authoritative Python environment; do **not** rely
+  on user-level or system-wide installations.
+
+## Development OS
+- WSL2 Ubuntu (Windows 11 host)
 
 ## Profiling
 - Nsight Compute (per-kernel)
