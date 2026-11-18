@@ -38,7 +38,7 @@ CUDA stream. The architecture follows a clean layered design:
 
 ### Design Principles
 
-1. **Naive-first kernels** — correctness before optimization (IMPLEMENTATION_RULES Rule 1)
+1. **Naive-first kernels** — correctness before optimization
 2. **Pre-allocated workspace** — zero `cudaMalloc`/`cudaFree` in forward/decode hot paths
 3. **Single CUDA stream** — all ops sequential, no concurrency bugs
 4. **RAII memory ownership** — `DeviceBuffer<T>` move-only, no raw pointer leaks
@@ -396,7 +396,7 @@ sync, but the benefit is small (host-side softmax over 50K elements is ~10 µs).
 
 ### 8.7 No FP16/BF16 Support
 All computation is FP32. Mixed precision would reduce memory bandwidth pressure
-and enable larger batch sizes, but is out of scope per AGENT.md.
+and enable larger batch sizes, but is out of scope.
 
 ---
 

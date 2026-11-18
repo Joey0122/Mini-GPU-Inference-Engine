@@ -2,7 +2,7 @@
 // Phase 4: causal multi-head scaled-dot-product attention (batch=1).
 //
 // Dedicated batched kernels; all heads handled in one launch via blockIdx.z.
-// Naive-but-correct first (AGENT.md kernel process): one block per (head, query
+// Initial CUDA layout: one block per (head, query
 // row); fp32 accumulation. Optimization versions (fused, shared-mem tiling,
 // GEMM-backed AV) are future work benchmarked against this baseline.
 

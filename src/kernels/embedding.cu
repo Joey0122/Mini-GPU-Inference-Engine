@@ -1,7 +1,7 @@
 // src/kernels/embedding.cu
 // Phase 5 C4: token + positional embedding gather+add kernel.
 //
-// Design (naive-first, following AGENT.md kernel process):
+// Kernel design:
 //   - 1D grid over sequence positions (blockIdx.x = s)
 //   - 1D block over embedding dimension (threadIdx.x = d), strided if needed
 //   - Each thread loads wte[token_ids[s], d] (gather) + wpe[s, d] (direct)
@@ -9,7 +9,7 @@
 //
 // The wte gather is a scattered read (depends on token_ids[s]); coalescing is
 // poor by construction for this naive kernel. Optimization (reshaped lookups,
-// vectorized loads) is deferred to Phase 6 — correctness first per IMPLEMENTATION_RULES Rule 1.
+// vectorized loads) is deferred to Phase 6.
 
 #include "kernels/embedding.hpp"
 

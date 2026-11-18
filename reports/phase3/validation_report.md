@@ -7,8 +7,7 @@ validated against PyTorch references through a file-based pipeline that runs the
 **actual committed CUDA kernels** and diffs their output against PyTorch within
 the PROJECT_SPEC FP32 tolerance (`max_abs_error < 1e-4`).
 
-This closes the gap left by the earlier CPU-only validation: PROJECT_SPEC and
-IMPLEMENTATION_RULES Rule 8 require validation against PyTorch specifically.
+This added PyTorch coverage to the earlier CPU-only validation.
 
 ## Pipeline
 

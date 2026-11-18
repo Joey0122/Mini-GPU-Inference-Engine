@@ -7,7 +7,7 @@
 // (tests/validation/validate_runner.cu) loads them, runs the actual committed
 // kernel, and diffs against the reference within the spec tolerance.
 //
-// Deliberately minimal (AGENT.md: justify new deps, prefer simple designs):
+// Supported NumPy layout:
 //   * .npy format v1.0 only (the version numpy.save writes by default)
 //   * dtype '<f4' (little-endian float32) only — the pipeline saves float32
 //   * C-contiguous, non-fortran-order only

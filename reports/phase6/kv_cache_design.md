@@ -14,9 +14,9 @@
 
 ### 1.1 Per-Step Computational Complexity
 
-The current `LaunchSamplingDecode` ([src/model/decode.cu:63-127](src/model/decode.cu)) runs a full
+The current `LaunchSamplingDecode` ([src/model/decode.cu](../../src/model/decode.cu)) runs a full
 `LaunchGpt2Forward` at each autoregressive step. The forward pass
-([src/model/forward.cu:24-56](src/model/forward.cu)) processes all S=prompt_len+step
+([src/model/forward.cu](../../src/model/forward.cu)) processes all S=prompt_len+step
 positions end-to-end:
 
 | Operation | FLOPs per step | Dominant term |
@@ -256,7 +256,7 @@ saving memory (the full workspace must still exist for prefill). After
 Phase 6, if memory pressure is a concern, we can resize.
 
 **One actual change**: the workspace is currently created at `max_seq =
-prompt_len + max_new_tokens` ([test_decode.cu:247](tests/unit/test_decode.cu#L247)).
+prompt_len + max_new_tokens` ([test_decode.cu](../../tests/unit/test_decode.cu)).
 With KV cache, the prefill workspace only needs `S = prompt_len`, and the
 decode workspace only needs `S = max_seq` for scores/weights (but linear
 ops at S=1). The simplest path: keep the workspace at `max_seq` but only
@@ -526,7 +526,7 @@ Implementation:
 
 ### 3.4 Changes to Decode
 
-The decode loop in [src/model/decode.cu:63-127](src/model/decode.cu) is
+The decode loop in [src/model/decode.cu](../../src/model/decode.cu) is
 restructured into two phases:
 
 ```cpp
@@ -687,7 +687,7 @@ the full S-sequence forward pass. ∎
 
 ### 4.3 Golden Tests
 
-The existing golden tests in [tests/unit/test_decode.cu](tests/unit/test_decode.cu)
+The existing golden tests in [tests/unit/test_decode.cu](../../tests/unit/test_decode.cu)
 must pass **unchanged** against the KV-cache decode:
 
 - `MultiPromptGreedyDecode`: 113/113 token matches (C9)
@@ -980,7 +980,7 @@ Body: prefill + loop of {sample, decode_step} as described in Section 3.4.
 - MODIFY: `benchmarks/forward/bench_forward.cu` — add prefill benchmark
 - MODIFY: `reports/phase6/kv_cache_design.md` — update to IMPLEMENTED status
   with actual benchmark numbers
-- MODIFY: `PROJECT_STATUS.md` — update Phase 6 status
+- MODIFY: `docs/roadmap.md` — update Phase 6 status
 
 **Benchmarks:**
 - Prefill latency at various S (should match existing forward benchmark

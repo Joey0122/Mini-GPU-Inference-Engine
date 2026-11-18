@@ -1,7 +1,7 @@
 # Benchmarking & Profiling Methodology
 
 This is the project-wide methodology that keeps performance numbers honest and
-reproducible (IMPLEMENTATION_RULES Rule 5 & 6). Every phase reuses it
+reproducible. Every phase reuses it
 unchanged.
 
 ## Timing: CUDA events, not wall clock
@@ -19,7 +19,7 @@ Google Benchmark drives the outer repetition loop and CLI; the CUDA-event
 harness supplies the GPU-accurate per-iteration time via `SetIterationTime` +
 `UseManualTime()`.
 
-## Required metrics (ARCHITECTURE.md)
+## Required metrics
 
 Every benchmark emits: **kernel name, input shape, execution time, bandwidth,
 GFLOPS, occupancy**. The first five come from the runtime harness
@@ -60,8 +60,7 @@ nvidia-smi -rgc                        # reset when done
 
 ## Profiling workflow (Nsight)
 
-Required for every major kernel before claiming an optimization
-(IMPLEMENTATION_RULES Rule 5; the `/profile` command formalizes the report):
+Profile each major kernel to measure the effect of an optimization.
 
 - **Nsight Compute** (`ncu`) — per-kernel: occupancy, warp execution
   efficiency, achieved bandwidth, memory throughput, SM utilization, L2 hit

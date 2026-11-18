@@ -2,8 +2,7 @@
 //
 // Reusable kernel-launch helpers.
 //
-// AGENT.md forbids hardcoded launch dimensions and duplicated launch code, and
-// asks for reusable launch wrappers. This header centralizes the grid-size
+// This header centralizes the grid-size
 // arithmetic every kernel needs. Phase 0 uses only CeilDiv / Grid1D; later
 // phases add 2D tile grids for GEMM/transpose here so the pattern stays in one
 // place.
@@ -18,7 +17,7 @@ namespace mgie {
 
 // Default 1D block size. A multiple of the warp size (32); 256 is a safe,
 // occupancy-friendly default on Ada (CC 8.9). Override per kernel when
-// profiling justifies it (Rule 5).
+// profiling justifies it.
 inline constexpr int kDefaultBlockSize = 256;
 
 // Ceiling division for computing grid dimensions from problem size.

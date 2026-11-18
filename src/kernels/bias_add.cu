@@ -1,7 +1,7 @@
 // src/kernels/bias_add.cu
 // Phase 5 C5: row-wise bias addition kernel.
 //
-// Design (naive-first, following AGENT.md kernel process):
+// Kernel design:
 //   - 1D grid over rows (blockIdx.x = i)
 //   - 1D block over feature dimension (threadIdx.x = d), strided over D
 //   - Each thread handles out[i, d] = x[i, d] + bias[d]

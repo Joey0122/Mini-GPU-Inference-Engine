@@ -1,6 +1,6 @@
 # benchmarks/CMakeLists.txt
 #
-# Benchmark build. Fetches Google Benchmark (TECH_STACK) and defines benchmark
+# Benchmark build. Fetches Google Benchmark and defines benchmark
 # executables. Google Benchmark drives the iteration/stat loop; the project's
 # bench_harness (CUDA events) supplies GPU bandwidth/GFLOPS and CSV export per
 # the ARCHITECTURE benchmark spec.

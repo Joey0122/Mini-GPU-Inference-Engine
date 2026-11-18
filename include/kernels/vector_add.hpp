@@ -2,13 +2,13 @@
 //
 // Launch interface for the Phase 0 vector-add kernel.
 //
-// vector_add is the project's "hello, GPU": TASK_BREAKDOWN Phase 0 calls for a
+// vector_add is the project's "hello, GPU": Phase 0 called for a
 // vector add kernel to prove the toolchain and exercise the benchmark harness.
 // It is intentionally trivial and memory-bound (3 floats of traffic per FLOP),
 // making it the canonical example of a bandwidth-limited kernel for Phase 0
 // docs.
 //
-// The kernel layer exposes ONLY launch wrappers (ARCHITECTURE.md): callers in
+// The kernel layer exposes ONLY launch wrappers (docs/architecture.md): callers in
 // tests/benchmarks include this header and never write <<<...>>> themselves.
 // This is the template every later kernel's public header follows.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """scripts/plot_benchmarks.py — turn benchmark CSVs into plots (scaffold).
 
-ARCHITECTURE.md / the Phase deliverables call for graphs showing each
+docs/architecture.md / the Phase deliverables call for graphs showing each
 optimization step's speedup (e.g. GFLOPS vs. matrix size, kernel vs. cuBLAS).
 The C++ benchmarks emit CSV rows via benchmarks/common/bench_harness.hpp; this
 script reads one or more of those CSVs and renders the standard plots into

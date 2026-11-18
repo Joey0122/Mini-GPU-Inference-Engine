@@ -2,7 +2,7 @@
 #
 # Continuous integration for the Mini GPU Inference Engine.
 #
-# IMPORTANT — the GPU honesty constraint (see ARCHITECTURE.md CI section and the
+# IMPORTANT — the GPU honesty constraint (see docs/architecture.md and the
 # Phase 0 review): GitHub-hosted runners have NO NVIDIA GPU. They can install
 # the CUDA toolkit and *compile* CUDA code, but cannot *run* any kernel. So CI is
 # split into two honest jobs:

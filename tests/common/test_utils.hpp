@@ -2,7 +2,7 @@
 //
 // Shared test helpers: tolerance comparison and CPU reference implementations.
 //
-// IMPLEMENTATION_RULES Rule 8 requires diffing kernel output against a
+// Validation compares kernel output against a
 // reference within a documented tolerance (FP32 < 1e-4, FP16 < 1e-2 per
 // PROJECT_SPEC). These helpers centralize that comparison so every kernel test
 // uses the same definition of "close enough", and provide the CPU reference
@@ -25,7 +25,7 @@
 
 namespace mgie::test {
 
-// ---- Tolerances (PROJECT_SPEC.md) -----------------------------------------
+// ---- Tolerances (docs/project-spec.md) -----------------------------------------
 
 inline constexpr float kFp32AbsTol = 1e-4f;
 inline constexpr float kFp16AbsTol = 1e-2f;

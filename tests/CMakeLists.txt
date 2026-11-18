@@ -1,7 +1,7 @@
 # tests/CMakeLists.txt
 #
 # Test build. Fetches GoogleTest and defines the test executables. The
-# validation strategy (IMPLEMENTATION_RULES Rule 8) is: every kernel is checked
+# validation strategy checks each kernel
 # against a CPU/PyTorch reference within a documented tolerance. Phase 0 wires
 # the harness with the vector_add kernel as the first GPU unit test plus a
 # host-only reference test that needs no GPU (so CI can run it — see ci.yml).

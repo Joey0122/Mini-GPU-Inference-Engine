@@ -67,7 +67,7 @@ k_head_ptr[p * head_dim + d]
 ```
 
 This is **exactly** the same indexing as the existing `AttentionScoresKernel`
-([src/kernels/attention.cu:38-39](src/kernels/attention.cu#L38-L39)):
+([src/kernels/attention.cu](../../src/kernels/attention.cu)):
 
 ```cpp
 const float* kh = k + static_cast<long long>(h) * S * head_dim;
@@ -274,7 +274,7 @@ attention scores+AV (quadratic term) vs. 3.15 MFLOPs with cache — a
 
 ### 3.1 Current Allocation
 
-In [src/model/workspace.cu:33](src/model/workspace.cu#L33):
+In [src/model/workspace.cu](../../src/model/workspace.cu):
 
 ```cpp
 ws.logits = DeviceBuffer<float>(static_cast<std::size_t>(S) * cfg.vocab_size);
@@ -297,7 +297,7 @@ In KV-cache mode, the decode step processes **one token at a time**.
 The prefill still produces `prompt_len` rows of logits (one-time cost).
 After prefill, only 1 row is needed per step.
 
-**Current decode loop** ([decode.cu:106-108](src/model/decode.cu#L106-L108)):
+**Current decode loop** ([decode.cu](../../src/model/decode.cu)):
 ```cpp
 CUDA_CHECK(cudaMemcpyAsync(last_logits.data(),
     ws.logits.data() + static_cast<std::size_t>(cur_S - 1) * V,

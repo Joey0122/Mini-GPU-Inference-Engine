@@ -10,7 +10,7 @@
 // Every version uses the SAME grid-stride global load (so each input element is
 // read exactly once and the memory-traffic comparison is fair); they differ
 // ONLY in the intra-block tree reduction. Versions are added incrementally and
-// each is validated before the next (IMPLEMENTATION_RULES Rule 2).
+// each is validated before the next.
 //
 // Implemented so far: Version A (Naive, interleaved addressing).
 

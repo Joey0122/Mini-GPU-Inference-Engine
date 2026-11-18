@@ -2,8 +2,8 @@
 
 The first public version runs GPT-2 Small (124M) FP32 inference and text
 generation at batch size 1 with a 1,024-token context. The
-[README](README.md) has the demo and reproduction steps. The
-[release report](reports/final/fp32-release.md) records the release measurements.
+[README](../README.md) has the demo and reproduction steps. The
+[release report](../reports/final/fp32-release.md) records the release measurements.
 
 | Phase | Implemented |
 | --- | --- |
@@ -23,5 +23,5 @@ step reuses the first hidden row and can attend to the full context.
 - End-to-end tokens/s comparison with Hugging Face Transformers.
 - Further decode optimization and profiling.
 
-[Earlier phase reports](reports/README.md) document the designs and measurements
+[Earlier phase reports](../reports/README.md) document the designs and measurements
 at each milestone.

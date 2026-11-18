@@ -1,8 +1,6 @@
-# PROJECT_SPEC.md
+# Original project specification
 
-# Mini GPU Inference Engine
-
-A CUDA-Based Transformer Inference Engine Built From Scratch
+The [project roadmap](roadmap.md) tracks which requirements the FP32 release implements.
 
 ## Project Objective
 

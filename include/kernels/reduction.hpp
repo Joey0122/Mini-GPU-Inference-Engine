@@ -2,10 +2,8 @@
 //
 // Launch interface for the Phase 1 sum-reduction kernel.
 //
-// Reduction is the first "real" GPU primitive (TASK_BREAKDOWN Phase 1). It
-// computes the sum of an array of floats. Three versions are implemented and
-// kept side-by-side for benchmarking (AGENT.md: do not delete previous
-// versions), all sharing one two-pass structure so comparisons are meaningful:
+// Reduction computes the sum of an array of floats. The three versions
+// share one two-pass structure for benchmarking:
 //
 //   Pass 1: input[0..n)        -> partial[0..num_blocks)   (one sum per block)
 //   Pass 2: partial[0..blocks) -> out[0]                   (single block)
@@ -18,7 +16,7 @@
 //   * WarpShuffle - __shfl_down_sync intra-warp reduce (no shared-mem round
 //                   trip for the intra-warp step).
 //
-// The kernel layer exposes ONLY launch wrappers (ARCHITECTURE.md): callers in
+// The kernel layer exposes ONLY launch wrappers (docs/architecture.md): callers in
 // tests/benchmarks include this header and never write <<<...>>> themselves.
 
 #pragma once
@@ -40,8 +38,7 @@ enum class ReductionVersion {
 // Scratch space for the two-pass reduction's intermediate block partial sums.
 //
 // Allocated ONCE by the caller (e.g. at benchmark/test setup) and reused across
-// launches so that no cudaMalloc occurs inside a timed region (AGENT.md: avoid
-// cudaMalloc in hot paths; benchmark timing must exclude allocation overhead).
+// launches so that no cudaMalloc occurs inside a timed region.
 // Move-only RAII ownership; frees on destruction.
 //
 // Future kernels needing scratch (softmax, attention) follow this same

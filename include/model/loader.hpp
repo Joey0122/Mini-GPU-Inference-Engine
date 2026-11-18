@@ -10,7 +10,7 @@
 // returned Gpt2Weights struct. After the call, the binary file is closed and
 // no raw pointers are retained; every tensor lives in an owned DeviceBuffer.
 // Do NOT call LoadGpt2Weights in the inference loop — load once at startup
-// and reuse the same Gpt2Weights for the lifetime of the engine. (AGENT.md)
+// and reuse the same Gpt2Weights for the lifetime of the engine.
 //
 // Weight layout (mirrors scripts/export_gpt2.py):
 //   wte       [vocab_size, n_embd]    token embeddings

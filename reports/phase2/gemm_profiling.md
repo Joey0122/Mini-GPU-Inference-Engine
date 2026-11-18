@@ -150,7 +150,7 @@ All four versions pass the full GPU test suite:
 ## Nsight Compute — Status (unchanged from Phase 1)
 
 ERR_NVGPUCTRPERM blocks hardware counter collection. Resolution steps in
-PROJECT_STATUS.md. Occupancy, register usage, and warp stall analysis above
+docs/roadmap.md. Occupancy, register usage, and warp stall analysis above
 are derived from theoretical calculation rather than measurement.
 
 ---

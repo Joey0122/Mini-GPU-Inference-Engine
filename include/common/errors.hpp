@@ -2,7 +2,7 @@
 //
 // Centralized CUDA error handling.
 //
-// ARCHITECTURE.md mandates that every CUDA runtime call be wrapped in
+// docs/architecture.md mandates that every CUDA runtime call be wrapped in
 // CUDA_CHECK(...) and that the macro live here. This header is the single
 // source of truth for that contract; nothing else in the codebase should
 // inspect a raw cudaError_t.

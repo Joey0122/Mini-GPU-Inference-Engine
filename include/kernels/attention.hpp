@@ -14,7 +14,7 @@
 //                                      multi-head output, ready for c_proj.
 //
 // The path is decomposed into dedicated batched kernels (one block grid over
-// all heads via blockIdx.z), kept naive-but-correct first per AGENT.md:
+// all heads via blockIdx.z):
 //
 //   1. LaunchAttentionScores : scores = scale * (Q Kᵀ), causal-masked
 //   2. (reuse) LaunchSoftmax : row-wise softmax over [n_head*S, S]
@@ -53,8 +53,7 @@ void LaunchAttentionAV(const float* weights, const float* v, float* out,
 // q, k, v : [n_head, S, head_dim]
 // out     : [S, n_head*head_dim]
 // scores, weights : caller-provided scratch, each [n_head, S, S]. Passing them
-//   in keeps allocation out of the hot path (AGENT.md memory rules); Phase 5
-//   allocates once and reuses across layers.
+//   in keeps allocation out of the hot path. The model reuses them across layers.
 void LaunchAttention(const float* q, const float* k, const float* v, float* out,
                      float* scores, float* weights,
                      int n_head, int S, int head_dim,

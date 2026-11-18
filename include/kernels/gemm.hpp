@@ -3,7 +3,7 @@
 // Launch interface for the Phase 2 GEMM kernels.
 //
 // Computes C = A * B (row-major, single-precision) in four progressive
-// versions, each kept for benchmarking (AGENT.md: do not delete versions):
+// versions, each kept for benchmarking:
 //
 //   Naive          - one thread per output element, no reuse
 //   TiledShared    - TILE×TILE shared-memory tiling

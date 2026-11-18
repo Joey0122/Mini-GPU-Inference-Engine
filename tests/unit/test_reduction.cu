@@ -9,7 +9,7 @@
 //
 // The version list `kVersions` grows as versions are implemented: Naive first,
 // then SharedMem, then WarpShuffle. Every test runs over all listed versions so
-// each is validated when it is added (IMPLEMENTATION_RULES Rule 2).
+// each is validated when it is added.
 
 #include <gtest/gtest.h>
 

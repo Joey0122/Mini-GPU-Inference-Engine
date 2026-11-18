@@ -2,7 +2,7 @@
 #
 # Defines an INTERFACE target `mgie_warnings` that carries the project's warning
 # flags for both the C++ (GCC) and CUDA (nvcc) compilers. Centralizing warnings
-# here keeps IMPLEMENTATION_RULES code-quality expectations consistent across
+# here keeps compiler diagnostics consistent across
 # every target and lets CI flip warnings-as-errors via MGIE_WARNINGS_AS_ERRORS
 # without touching individual targets.
 #

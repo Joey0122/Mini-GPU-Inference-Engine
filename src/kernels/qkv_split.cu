@@ -1,7 +1,7 @@
 // src/kernels/qkv_split.cu
 // Phase 5 C6: QKV split kernel — c_attn output to head-major Q, K, V tensors.
 //
-// Design (naive-first, following AGENT.md kernel process):
+// Kernel design:
 //   - 1D grid: n_head * S blocks, one per (head, sequence position) pair
 //   - 1D block: head_dim threads, one per dimension element
 //   - Each thread reads 3 values from x (Q, K, V blocks) and writes to q, k, v

@@ -2,7 +2,7 @@
 //
 // GPU timing built on CUDA events.
 //
-// The benchmark requirements (ARCHITECTURE.md, /benchmark) demand execution
+// The benchmark harness reports execution
 // time, bandwidth, and GFLOPS with warm-up and multi-iteration statistics.
 // Wall-clock host timers cannot measure GPU kernel time accurately because
 // launches are asynchronous; CUDA events recorded on a stream are the correct
@@ -14,7 +14,7 @@
 //                        by the benchmark harness in benchmarks/common).
 //
 // Host-only. Phases 1-6 reuse this for every kernel benchmark, so the timing
-// methodology stays identical across the whole project (Rule 6 reproducibility).
+// methodology stays identical across the whole project.
 
 #pragma once
 

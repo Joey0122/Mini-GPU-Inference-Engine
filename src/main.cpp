@@ -2,13 +2,7 @@
 //
 // Phase 0 entry point / toolchain smoke test.
 //
-// Queries the GPU, prints reproducibility metadata (Rule 6), runs vector_add
-// once, and verifies the result on the host. This is the "one benchmarked
-// kernel + working build" deliverable target from TASK_BREAKDOWN Phase 0,
-// proving the end-to-end path: host -> device -> kernel -> host.
-//
-// Future role: grows into the inference CLI in Phase 5 (load weights, accept a
-// prompt, stream tokens). For now it is a deliberately small demo.
+// Queries the GPU, runs vector_add, and verifies the result on the host.
 
 #include <cstddef>
 #include <vector>

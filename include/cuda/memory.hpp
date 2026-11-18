@@ -2,8 +2,7 @@
 //
 // RAII device-memory ownership.
 //
-// AGENT.md requires documented memory ownership and discourages cudaMalloc in
-// hot paths. DeviceBuffer is a small owning wrapper: it allocates on
+// DeviceBuffer is a small owning wrapper: it allocates on
 // construction, frees on destruction, and is move-only so ownership is always
 // unambiguous. Phase 0 uses it in the vector_add test/benchmark to avoid manual
 // malloc/free pairs.

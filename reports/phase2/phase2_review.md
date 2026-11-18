@@ -8,7 +8,7 @@
 
 ## Completed Work
 
-Seven kernel versions implemented, all kept for benchmarking per AGENT.md.
+Seven kernel versions implemented, all kept for benchmarking.
 
 | Version | Configuration |
 |---------|--------------|
@@ -86,7 +86,7 @@ Nsight Systems (Version C at 4096³):
 - `cudaMalloc` absent from timed loop: confirmed
 
 Nsight Compute: blocked by ERR_NVGPUCTRPERM (environment limitation, documented
-in PROJECT_STATUS.md). Occupancy and warp stall analysis performed theoretically:
+in docs/roadmap.md). Occupancy and warp stall analysis performed theoretically:
 - 33% occupancy (2 blocks/SM) at the 128-tile configuration
 - Bottleneck confirmed as FMA:load ratio in inner k-loop, validated by Step 1 gain
 

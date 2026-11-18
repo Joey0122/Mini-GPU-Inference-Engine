@@ -2,7 +2,7 @@
 //
 // Core value types shared across every layer.
 //
-// ARCHITECTURE.md mandates a common Tensor abstraction so kernels operate
+// The original design described a common Tensor abstraction so kernels operate
 // through a shared structure instead of raw pointers threaded everywhere.
 // This is the Phase 0 skeleton: enough to type-check launch wrappers and the
 // benchmark/test harness. It deliberately does NOT own memory yet — allocation
@@ -47,7 +47,7 @@ inline std::size_t DTypeSize(DType dtype) {
 }
 
 // Non-owning tensor view. Memory ownership is documented at the allocation
-// site (runtime layer), per AGENT.md "document ownership of all memory".
+// site (runtime layer).
 struct Tensor {
   void* data = nullptr;
   std::vector<int> shape;

@@ -81,5 +81,5 @@ comparison produces a nonzero exit code.
 
 ## Further work
 
-[Project status](PROJECT_STATUS.md) tracks FP16 Tensor Core GEMM, Prefix Scan,
+[Project roadmap](docs/roadmap.md) tracks FP16 Tensor Core GEMM, Prefix Scan,
 standalone Transpose, and end-to-end tokens/s comparisons.

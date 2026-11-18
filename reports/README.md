@@ -1,6 +1,6 @@
 # reports/ — Per-phase engineering writeups
 
-Each phase produces a report (ARCHITECTURE.md "Documentation Requirements"):
+Each phase produces a report (docs/architecture.md "Documentation Requirements"):
 **Summary / Results / Problems / Fixes / Lessons Learned**. These are the most
 valuable artifact of the project — the explanation of *why* each optimization
 worked, backed by profiler evidence.

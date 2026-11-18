@@ -1,10 +1,7 @@
-# ARCHITECTURE.md
+# Architecture and engineering design
 
-# Mini GPU Inference Engine
-
-Architecture and Engineering Standards
-
-Version: 1.0
+These notes record the original system design, including planned components.
+The [project roadmap](roadmap.md) lists the components shipped in the FP32 release.
 
 ---
 
@@ -63,7 +60,7 @@ Every implementation decision should be justified by profiling data, benchmark r
 
 ---
 
-# Repository Structure
+# Planned Repository Structure
 
 ```text
 mini-gpu-inference/

@@ -99,7 +99,7 @@ Nsight Compute requires `NVreg_RestrictProfilingToAdminUsers=0` driver config,
 not available in non-interactive WSL2. Classified as environment limitation;
 does not affect correctness or the bandwidth measurements.
 
-Resolution documented in PROJECT_STATUS.md. Does not block Phase 2.
+Resolution documented in docs/roadmap.md. Does not block Phase 2.
 
 ---
 

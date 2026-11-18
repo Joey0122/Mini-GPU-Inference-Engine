@@ -1,9 +1,8 @@
 # cmake/FetchDependencies.cmake
 #
 # Fetches third-party test/benchmark dependencies via FetchContent so the build
-# is reproducible and requires no system-wide installs. TECH_STACK pins
-# GoogleTest (testing) and Google Benchmark (benchmarking); both are pulled at
-# fixed tags here.
+# is reproducible and requires no system-wide installs. GoogleTest and Google
+# Benchmark are fetched at fixed tags.
 #
 # Called lazily by tests/ and benchmarks/ via the helper functions below so the
 # fetch only happens when that subtree is enabled.

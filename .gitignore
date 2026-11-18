@@ -36,13 +36,23 @@ venv/
 /data/test_vectors/**/*.npy
 /data/test_vectors/golden/
 
-# Machine-local tooling
-/.claude/settings.local.json
+# Local development tooling and notes
+/.claude/
+AGENT.md
+AGENTS.md
+CLAUDE.md
+CLAUDE.local.md
+/.clang-format
+/.clang-tidy
 /.codex/
 /.agents/
 /.aws/
 /MEMORY.md
 /NEXT_TASK.md
+/IMPLEMENTATION_RULES.md
+/ProjctOutline.md
+/TASK_BREAKDOWN.md
+/TECH_STACK.md
 
 # Editor / OS
 .vscode/

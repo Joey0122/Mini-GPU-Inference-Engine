@@ -50,7 +50,7 @@ namespace mt = mgie::test;
 #define MGIE_REPORT_DIR "reports/phase3"
 #endif
 
-// Spec gate (PROJECT_SPEC.md): FP32 max_abs_error < 1e-4.
+// Spec gate (docs/project-spec.md): FP32 max_abs_error < 1e-4.
 constexpr float kGate = 1e-4f;
 
 bool CudaAvail() {

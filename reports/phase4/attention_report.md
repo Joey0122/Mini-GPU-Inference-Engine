@@ -13,8 +13,8 @@ and belong to Phase 5 (transformer-block assembly); KV cache is Phase 6.
 
 ## Kernels
 
-Dedicated batched kernels (all 12 heads in one launch via `blockIdx.y`),
-naive-but-correct first per the AGENT.md kernel process.
+The first implementation used dedicated batched kernels, with all 12 heads
+in one launch via `blockIdx.y`.
 
 | Step | Kernel | Math | Layout |
 |------|--------|------|--------|

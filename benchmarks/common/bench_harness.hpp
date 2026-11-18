@@ -1,10 +1,10 @@
 // benchmarks/common/bench_harness.hpp
 //
-// Project benchmark harness — the columns ARCHITECTURE.md requires.
+// Project benchmark harness — the columns docs/architecture.md requires.
 //
-// ARCHITECTURE.md specifies every benchmark must emit: kernel name, input
+// docs/architecture.md specifies every benchmark must emit: kernel name, input
 // shape, execution time, bandwidth, GFLOPS, occupancy, exportable to CSV.
-// Google Benchmark (per TECH_STACK) drives the iteration loop and statistics,
+// Google Benchmark drives the iteration loop and statistics,
 // but it has no concept of GPU bandwidth/GFLOPS/occupancy — so this harness
 // computes those from CUDA-event timings and writes the canonical CSV row.
 //

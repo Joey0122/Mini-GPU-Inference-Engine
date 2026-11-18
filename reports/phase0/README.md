@@ -1,19 +1,18 @@
 # Phase 0 Report — Environment Setup & Scaffolding
 
-> Per ARCHITECTURE.md, every phase produces a report with Summary / Results /
+> Per docs/architecture.md, every phase produces a report with Summary / Results /
 > Problems / Fixes / Lessons. This report covers Phase 0 (scaffolding). It will
 > be finalized once the toolchain is installed and the build/test/benchmark
 > have actually run on the target GPU.
 
 ## Summary — What was built
 
-The full repository skeleton from ARCHITECTURE.md, a CMake build targeting
+The full repository skeleton from docs/architecture.md, a CMake build targeting
 Windows 11 / CUDA 12.x / VS 2022 / sm_89, the GoogleTest and Google Benchmark
 frameworks, a CUDA-event benchmark harness emitting the required CSV columns,
 Python validation/plotting scripts, GitHub Actions CI (build + host-only
 tests), and lint/format configs. The only kernel implemented is `vector_add`,
-the Phase 0 toolchain smoke test (TASK_BREAKDOWN Phase 0 explicitly calls for a
-vector-add kernel).
+the Phase 0 toolchain smoke test.
 
 No production kernels (reduction, GEMM, softmax, etc.) and no GPT-2 code were
 implemented — those belong to Phase 1+.
@@ -66,7 +65,7 @@ tiny — the reference example for "memory-bound" in Phase 0 docs.
 
 ## Definition of Done — Phase 0 checklist
 
-- [x] Directory tree matches ARCHITECTURE.md
+- [x] Directory tree matches docs/architecture.md
 - [x] CMake configuration authored (CUDA target, tests, benchmarks)
 - [x] GoogleTest integrated; unit + reference tests authored
 - [x] Google Benchmark integrated; CUDA-event harness + vector_add benchmark

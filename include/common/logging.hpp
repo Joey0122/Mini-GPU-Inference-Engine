@@ -2,7 +2,7 @@
 //
 // Single, minimal logging interface.
 //
-// ARCHITECTURE.md / AGENT.md require one centralized logger with the levels
+// The centralized logger provides the levels
 // INFO / WARN / ERROR / DEBUG and forbid scattered printf in kernels. This is
 // a header-only, dependency-free implementation: a runtime-settable threshold
 // plus stream-style macros that compile to a no-op below the active level.
@@ -13,7 +13,7 @@
 //   mgie::Logger::SetLevel(mgie::LogLevel::kDebug);  // raise verbosity
 //
 // Host-only. Device code must not log; kernels return data and the host
-// reports it (keeps the kernel layer free of IO per ARCHITECTURE.md).
+// reports it (keeps the kernel layer free of IO per docs/architecture.md).
 
 #pragma once
 

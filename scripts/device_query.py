@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """scripts/device_query.py — replacement for the deprecated deviceQuery sample.
 
-TASK_BREAKDOWN Phase 0 lists "deviceQuery" as a setup step, but recent CUDA
-toolkits no longer install that CUDA sample by default. This script reproduces
+This script provides a device summary without building the CUDA samples. It reproduces
 the essential output (device name, compute capability, memory, SM count,
 theoretical bandwidth) so the Phase 0 toolchain check is self-contained.
 
