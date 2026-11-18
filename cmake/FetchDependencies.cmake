@@ -24,7 +24,8 @@ function(mgie_fetch_googletest)
     GIT_TAG        ${MGIE_GOOGLETEST_TAG}
     GIT_SHALLOW    TRUE
   )
-  # Use the shared CRT under MSVC to match the rest of the build.
+  # gtest_force_shared_crt: a GoogleTest CMake variable for the MSVC shared CRT.
+  # It is a no-op on Linux/GCC but kept enabled for future Windows portability.
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
 endfunction()

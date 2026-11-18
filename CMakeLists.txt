@@ -46,10 +46,24 @@ option(MGIE_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 include(${CMAKE_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
 
 # ---- Core library ----------------------------------------------------------
-# Holds the CUDA kernels and (later) runtime/model code. Phase 0 contains only
-# vector_add plus the header-only common/cuda utilities.
+# Hand-written CUDA kernels and GPT-2 model code.
 add_library(mgie_core
   src/kernels/vector_add.cu
+  src/kernels/reduction.cu
+  src/kernels/gemm.cu
+  src/kernels/layernorm.cu
+  src/kernels/softmax.cu
+  src/kernels/gelu.cu
+  src/kernels/attention.cu
+  src/kernels/embedding.cu
+  src/kernels/bias_add.cu
+  src/kernels/qkv_split.cu
+  src/model/loader.cpp
+  src/model/workspace.cu
+  src/model/transformer_block.cu
+  src/model/forward.cu
+  src/model/decode.cu
+  src/model/kv_cache.cu
 )
 target_include_directories(mgie_core PUBLIC ${CMAKE_SOURCE_DIR}/include)
 set_target_properties(mgie_core PROPERTIES
@@ -57,9 +71,12 @@ set_target_properties(mgie_core PROPERTIES
   POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(mgie_core PRIVATE mgie_warnings)
 
-# ---- Executable (Phase 0 smoke test / future inference CLI) ----------------
+# ---- Executables -----------------------------------------------------------
 add_executable(mgie_app src/main.cpp)
 target_link_libraries(mgie_app PRIVATE mgie_core mgie_warnings)
+
+add_executable(mgie_generate src/generate.cpp)
+target_link_libraries(mgie_generate PRIVATE mgie_core mgie_warnings)
 
 # ---- Tests -----------------------------------------------------------------
 if(MGIE_BUILD_TESTS)

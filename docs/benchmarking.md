@@ -52,10 +52,10 @@ stamped into each CSV row automatically; record the rest in the phase report.
 **Lock clocks before measuring.** The RTX 4070 Laptop throttles under sustained
 load, so unlocked numbers are not reproducible:
 
-```powershell
+```bash
 nvidia-smi -lgc <min_mhz>,<max_mhz>   # lock graphics clock
 # ... run benchmarks ...
-nvidia-smi -rgc                       # reset when done
+nvidia-smi -rgc                        # reset when done
 ```
 
 ## Profiling workflow (Nsight)

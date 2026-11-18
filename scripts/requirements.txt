@@ -1,15 +1,4 @@
-# scripts/requirements.txt
-#
-# Python dependencies for the validation + plotting tooling.
-#
-# Setup:
-#   python3 -m venv .venv
-#   source .venv/bin/activate
-#   pip install -r scripts/requirements.txt
-#
-# Use the project-local .venv — do not rely on system or user-level installs.
-
-numpy>=1.26
-torch>=2.2 --index-url https://download.pytorch.org/whl/cu130
-matplotlib>=3.8     # benchmark plots (optional but recommended)
-safetensors>=0.4    # Phase 5: load GPT-2 Small HuggingFace weights
+# Install CPU PyTorch first using the command in README.md.
+numpy==2.4.4
+transformers==5.10.2
+safetensors==0.7.0

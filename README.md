@@ -1,84 +1,85 @@
-# Mini GPU Inference Engine
+# GPT-2 Small in hand-written CUDA
 
-A from-scratch CUDA inference engine for **GPT-2 Small (124M)**, built to
-demonstrate GPU systems engineering: every core kernel — reduction, GEMM,
-softmax, LayerNorm, GELU, attention — is hand-written, benchmarked against
-cuBLAS/PyTorch, profiled with Nsight, and documented.
+FP32 inference for GPT-2 Small (124M), batch size 1. C++/CUDA runs the full
+forward pass, KV-cache decoding, and token selection. Python handles weight
+export and turns text into token IDs and back. cuBLAS is used in benchmarking
+and tests.
 
-> **Status:** Phase 0 (scaffolding). No production kernels implemented yet.
-> The repository currently contains the build system, test/benchmark
-> frameworks, and a single `vector_add` toolchain smoke-test kernel.
+## Generate text
 
-## Goals
-
-- Run GPT-2 Small forward inference on GPU, batch size 1, arbitrary prompt
-  length, greedy + temperature sampling.
-- Hand-write all critical CUDA kernels (cuBLAS allowed only as a benchmark
-  baseline, never as the implementation).
-- Validate every kernel against a PyTorch/CPU reference (FP32 < 1e-4,
-  FP16 < 1e-2) before any optimization.
-- Profile and document the optimization journey with Nsight evidence.
-
-See [PROJECT_SPEC.md](PROJECT_SPEC.md) for the authoritative requirements and
-[ARCHITECTURE.md](ARCHITECTURE.md) for the design.
-
-## Target environment
-
-| | |
-|---|---|
-| OS | Windows 11 |
-| GPU | RTX 4070 Laptop (Ada, compute capability 8.9), 8 GB |
-| CUDA | 12.x |
-| Host compiler | Visual Studio 2022 (MSVC — required by `nvcc` on Windows) |
-| Language | C++17 + CUDA |
-| Build | CMake ≥ 3.24 + Ninja |
-| Test | GoogleTest |
-| Benchmark | Google Benchmark + CUDA-event harness |
-| Validation | Python 3.10+, PyTorch (reference only) |
-
-## Building
-
-```powershell
-# From a "x64 Native Tools Command Prompt for VS 2022" (so cl.exe + nvcc are on PATH)
-cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES=89
-cmake --build build
+```bash
+python scripts/generate.py --max-new-tokens 24 "In a quiet corner of the library, she found"
 ```
 
-### Run the Phase 0 smoke test
+Actual output from the CUDA engine
 
-```powershell
-build\mgie_app.exe            # prints device info + runs vector_add
+```text
+In a quiet corner of the library, she found a book.
+
+"I'm sorry, but I don't know what you're talking about," she said.
 ```
 
-### Tests
+## Results
 
-```powershell
-ctest --test-dir build --output-on-failure          # all tests
-ctest --test-dir build -L cpu --output-on-failure   # host-only (no GPU)
-ctest --test-dir build -L gpu --output-on-failure   # GPU kernels
+| Check | Result |
+| --- | --- |
+| FP32 logits vs Hugging Face on CPU | Maximum absolute error **2.594e-4** (limit **5e-3**) and **53/53** matching argmax positions across four prompts |
+| Greedy decoding vs Hugging Face | **100/100** matching newly generated tokens across four prompts, excluding the prompt tokens |
+| 4096 × 4096 × 4096 FP32 GEMM | **6.44 TFLOP/s** for the register-tiled kernel vs **10.97 TFLOP/s** for cuBLAS SGEMM (**58.7%**) |
+
+Measured on an NVIDIA GeForce RTX 4070 Laptop GPU (8 GB, sm_89), CUDA 12.4.
+GEMM uses strict FP32 for both paths and reports the mean of 50 per-launch
+CUDA-event timings after 10 warmups, with matrices already on the GPU.
+See the [release report](reports/final/fp32-release.md) for the benchmark
+command and full validation results.
+
+## Reproduce
+
+Tested on WSL2 Ubuntu with an RTX 4070 Laptop GPU, CUDA Toolkit 12.4, GCC 13,
+CMake 4.2 and Python 3.14. You need a Linux or WSL2 NVIDIA CUDA environment
+with a compatible host compiler, CMake 3.24+, Ninja, and Python with `venv`.
+Set `CMAKE_CUDA_ARCHITECTURES` for your GPU (`89` for compute capability 8.9).
+The included toolchain file expects GCC 13 in `/usr/bin`. See
+[toolchain setup](docs/setup.md).
+
+```bash
+git clone https://github.com/Joey0122/Mini-GPU-Inference-Engine.git
+cd Mini-GPU-Inference-Engine
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cpu
+python -m pip install -r scripts/requirements.txt
+export HF_HUB_DISABLE_XET=1
+export OMP_NUM_THREADS=4
+python scripts/export_gpt2.py
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/wsl2-gcc13.cmake \
+  -DCMAKE_CUDA_ARCHITECTURES=89
+cmake --build build --parallel 8
 ```
 
-### Benchmarks
+Run the [generation command above](#generate-text) from the repository root.
+The export downloads the pinned public [GPT-2 checkpoint](https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e)
+(548 MB) and writes 652 MB of FP32 weights to `data/model_weights/`. The
+first generation also downloads the tokenizer. The total budget is 1,024
+tokens including the prompt, and the CLI uses greedy decoding.
 
-```powershell
-build\bench_vector_add.exe                          # writes vector_add_results.csv
-python scripts/plot_benchmarks.py vector_add_results.csv
+## Validate
+
+```bash
+python scripts/generate_reference.py --kernel all
+rm -f data/test_vectors/golden/*.bin
+ctest --test-dir build --output-on-failure
+python scripts/golden_test.py
 ```
 
-> **Reproducible benchmarking:** lock GPU clocks before measuring
-> (`nvidia-smi -lgc <min>,<max>`) — the laptop 4070 throttles under sustained
-> load and will otherwise produce noisy numbers.
+Allow 5 GB of free disk space for the full setup and validation, including
+about 1.4 GiB for generated test vectors. The golden check expects the
+CUDA output files written by CTest. Run from a fresh checkout for release
+validation. Every golden case is required, and a missing output or failed
+comparison produces a nonzero exit code.
 
-## Repository layout
+## Further work
 
-See [ARCHITECTURE.md](ARCHITECTURE.md#repository-structure). In short:
-`include/` + `src/` (common/cuda/kernels/runtime/model), `tests/`,
-`benchmarks/`, `scripts/` (Python validation + plotting), `reports/`
-(per-phase writeups), `docs/`.
-
-## Roadmap
-
-Phases 0–7 in [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md): setup → primitives →
-GEMM → transformer components → attention → GPT-2 inference → optimization →
-publication. Phase gates are enforced — a phase is not done until it compiles,
-tests pass, a benchmark exists, results are documented, and it's committed.
+[Project status](PROJECT_STATUS.md) tracks FP16 Tensor Core GEMM, Prefix Scan,
+standalone Transpose, and end-to-end tokens/s comparisons.

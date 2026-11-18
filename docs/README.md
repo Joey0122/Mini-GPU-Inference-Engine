@@ -7,8 +7,7 @@ material that isn't tied to a single phase.
 
 ## Contents
 
-- [`setup.md`](setup.md) — toolchain installation for Windows 11 + CUDA 12.x +
-  Visual Studio 2022, and how to verify it.
+- [`setup.md`](setup.md) — toolchain setup for Linux or WSL2 with CUDA and GCC.
 - [`benchmarking.md`](benchmarking.md) — the benchmarking + profiling
   methodology (CUDA-event timing, clock locking, CSV schema, Nsight workflow).
 

@@ -33,7 +33,16 @@ venv/
 # Model weights / large data (downloaded, not committed)
 /data/model_weights/*
 !/data/model_weights/.gitkeep
-/data/test_vectors/*.npy
+/data/test_vectors/**/*.npy
+/data/test_vectors/golden/
+
+# Machine-local tooling
+/.claude/settings.local.json
+/.codex/
+/.agents/
+/.aws/
+/MEMORY.md
+/NEXT_TASK.md
 
 # Editor / OS
 .vscode/
