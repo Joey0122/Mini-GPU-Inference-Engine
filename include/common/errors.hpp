@@ -2,10 +2,7 @@
 //
 // Centralized CUDA error handling.
 //
-// docs/architecture.md mandates that every CUDA runtime call be wrapped in
-// CUDA_CHECK(...) and that the macro live here. This header is the single
-// source of truth for that contract; nothing else in the codebase should
-// inspect a raw cudaError_t.
+// CUDA_CHECK turns a CUDA runtime error into an exception with call-site context.
 //
 // Usage:
 //   CUDA_CHECK(cudaMalloc(&ptr, bytes));
@@ -13,8 +10,7 @@
 //   CUDA_CHECK_LAST();  // check the error state after a kernel launch
 //
 // On failure the macro logs file:line, the failing expression, and the CUDA
-// error string, then throws CudaError. Throwing (rather than abort()) lets
-// GoogleTest report a clean failure instead of crashing the test binary.
+// error string, then throws CudaError.
 
 #pragma once
 
@@ -69,7 +65,7 @@ inline void CheckCuda(cudaError_t status, const char* expr, const char* file,
 #define CUDA_CHECK_LAST() \
   ::mgie::detail::CheckCuda(cudaGetLastError(), "kernel launch", __FILE__, __LINE__)
 
-// Launch check that also synchronizes — use in tests/debug where you want
+// Launch check that also synchronizes — use when debugging where you want
 // launch *and* execution errors surfaced at the call site. Avoid in hot paths.
 #define CUDA_CHECK_LAST_SYNC()                                                \
   do {                                                                        \

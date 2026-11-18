@@ -13,7 +13,7 @@
 //   mgie::Logger::SetLevel(mgie::LogLevel::kDebug);  // raise verbosity
 //
 // Host-only. Device code must not log; kernels return data and the host
-// reports it (keeps the kernel layer free of IO per docs/architecture.md).
+// reports it without adding I/O to the kernel layer.
 
 #pragma once
 

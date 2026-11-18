@@ -1,6 +1,6 @@
 // include/kernels/embedding.hpp
 //
-// Launch interface for the Phase 5 C4 embedding kernel.
+// Launch interface for the embedding kernel.
 //
 // GPT-2 embeddings combine a token lookup (wte) with a positional encoding (wpe):
 //   out[s, d] = wte[token_ids[s], d] + wpe[s, d]
@@ -25,7 +25,7 @@ namespace mgie {
 // Launch the embedding gather+add kernel.
 // Each thread handles one element of the output; grid spans (S, n_embd).
 // The wte lookup is an indexed gather — performance is memory-latency-bound
-// by design for this naive version (optimization deferred to Phase 6).
+// in the token embedding table.
 void LaunchEmbedding(const int* token_ids, const float* wte, const float* wpe,
                      float* out, int S, int n_embd, int vocab_size,
                      cudaStream_t stream = nullptr);

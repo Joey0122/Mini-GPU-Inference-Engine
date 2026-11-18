@@ -2,8 +2,7 @@
 //
 // Pre-allocated workspace for GPT-2 forward pass.
 //
-// C8 replaces per-call cudaMalloc/cudaFree inside LaunchTransformerBlock with
-// a single allocation at Forward entry. TransformerBlockWorkspace holds all
+// TransformerBlockWorkspace holds all
 // the intermediate buffers needed by one block; it is reused across all 12
 // layers (the blocks run sequentially, so one set of buffers is enough).
 //

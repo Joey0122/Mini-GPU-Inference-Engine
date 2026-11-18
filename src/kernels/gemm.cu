@@ -1,4 +1,4 @@
-// src/kernels/gemm.cu — Phase 2 GEMM, all versions including Steps 1–3.
+// src/kernels/gemm.cu
 
 #include "kernels/gemm.hpp"
 #include "cuda/launch.hpp"
@@ -215,7 +215,7 @@ __global__ void GemmReg128PadUnrollKernel(const float* __restrict__ A,
 #undef INNER_K_LOOP_PLAIN
 #undef INNER_K_LOOP_UNROLL
 
-// ---- Phase 6b: Dedicated GEMV for M=1 decode -------------------------------
+// ---- Dedicated GEMV for M=1 decode -------------------------------
 //
 // For M=1 the GEMM degenerates to a matrix-vector product c[n] = sum_k a[k]*B[k,n].
 // RegTiled128Pad processes 128-row tiles where 127/128 rows produce zero output,
@@ -265,7 +265,7 @@ void LaunchGemm(const float* A, const float* B, float* C,
                 GemmVersion version, cudaStream_t stream) {
   if (M==0 || N==0 || K==0) return;
 
-  // Phase 6b: M=1 dispatch — route to dedicated GEMV kernel.
+  // M=1 dispatch — route to dedicated GEMV kernel.
   // The tiled GEMM kernels are designed for M ≫ 1 and waste 127/128 rows
   // when M=1 (0.78% tile utilization). GEMV maps one thread per output element
   // and achieves near-peak memory bandwidth for all decode shapes.

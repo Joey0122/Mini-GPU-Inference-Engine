@@ -1,6 +1,6 @@
 // include/kernels/reduction.hpp
 //
-// Launch interface for the Phase 1 sum-reduction kernel.
+// Launch interface for the sum-reduction kernel.
 //
 // Reduction computes the sum of an array of floats. The three versions
 // share one two-pass structure for benchmarking:
@@ -16,8 +16,6 @@
 //   * WarpShuffle - __shfl_down_sync intra-warp reduce (no shared-mem round
 //                   trip for the intra-warp step).
 //
-// The kernel layer exposes ONLY launch wrappers (docs/architecture.md): callers in
-// tests/benchmarks include this header and never write <<<...>>> themselves.
 
 #pragma once
 
@@ -37,7 +35,7 @@ enum class ReductionVersion {
 
 // Scratch space for the two-pass reduction's intermediate block partial sums.
 //
-// Allocated ONCE by the caller (e.g. at benchmark/test setup) and reused across
+// Allocated ONCE by the caller and reused across
 // launches so that no cudaMalloc occurs inside a timed region.
 // Move-only RAII ownership; frees on destruction.
 //

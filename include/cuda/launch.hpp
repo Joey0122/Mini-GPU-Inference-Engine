@@ -1,11 +1,6 @@
 // include/cuda/launch.hpp
 //
-// Reusable kernel-launch helpers.
-//
-// This header centralizes the grid-size
-// arithmetic every kernel needs. Phase 0 uses only CeilDiv / Grid1D; later
-// phases add 2D tile grids for GEMM/transpose here so the pattern stays in one
-// place.
+// Reusable grid-sizing helpers for CUDA kernel launches.
 
 #pragma once
 

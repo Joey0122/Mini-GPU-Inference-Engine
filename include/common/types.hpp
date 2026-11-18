@@ -1,17 +1,6 @@
 // include/common/types.hpp
 //
-// Core value types shared across every layer.
-//
-// The original design described a common Tensor abstraction so kernels operate
-// through a shared structure instead of raw pointers threaded everywhere.
-// This is the Phase 0 skeleton: enough to type-check launch wrappers and the
-// benchmark/test harness. It deliberately does NOT own memory yet — allocation
-// lives in the runtime layer (src/runtime/allocator.cu), arriving in a later
-// phase. Tensor here is a non-owning view (data + shape + dtype + device).
-//
-// Future role: Phases 1-5 extend this with stride support, element-count and
-// byte-size helpers, and an owning TensorStorage. The model layer passes
-// Tensors to kernel launch wrappers; nothing downstream should see void* args.
+// Common tensor metadata and element types.
 
 #pragma once
 
@@ -22,8 +11,7 @@
 
 namespace mgie {
 
-// Element data type. FP32 is the Phase 0..2 workhorse; FP16 arrives with the
-// Tensor Core GEMM path (Phase 2) and the half-precision tolerance in the spec.
+// Element data type.
 enum class DType {
   kFloat32,
   kFloat16,
@@ -47,7 +35,7 @@ inline std::size_t DTypeSize(DType dtype) {
 }
 
 // Non-owning tensor view. Memory ownership is documented at the allocation
-// site (runtime layer).
+// site.
 struct Tensor {
   void* data = nullptr;
   std::vector<int> shape;

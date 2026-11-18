@@ -1,5 +1,5 @@
 // src/model/loader.cpp
-// Phase 5: GPT-2 weight loader — manifest + flat binary → DeviceBuffers.
+// GPT-2 weight loader — manifest + flat binary → DeviceBuffers.
 
 #include "model/loader.hpp"
 

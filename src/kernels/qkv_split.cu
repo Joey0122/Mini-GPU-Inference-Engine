@@ -1,5 +1,5 @@
 // src/kernels/qkv_split.cu
-// Phase 5 C6: QKV split kernel — c_attn output to head-major Q, K, V tensors.
+// QKV split kernel — c_attn output to head-major Q, K, V tensors.
 //
 // Kernel design:
 //   - 1D grid: n_head * S blocks, one per (head, sequence position) pair
@@ -64,7 +64,7 @@ void LaunchQkvSplit(const float* x,
                                               head_dim);
 }
 
-// ---- Phase 6a: QKV Split to KV Cache ----------------------------------------
+// ---- QKV Split to KV Cache ----------------------------------------
 // Same data rearrangement as QkvSplitKernel, but K and V are written directly
 // into the KV cache at n_ctx stride (instead of workspace at S stride).
 // Q still goes to workspace (q) since it is consumed immediately by attention.

@@ -25,7 +25,7 @@ set(MGIE_MSVC_WARNINGS /W4 /permissive-)
 
 # --- nvcc device warnings ---
 # Forward host warnings through -Xcompiler; enable ptxas verbosity later when
-# profiling register/shared-mem usage (Phase 1+).
+# profiling register and shared memory usage.
 set(MGIE_CUDA_WARNINGS --Werror=cross-execution-space-call)
 
 if(MGIE_WARNINGS_AS_ERRORS)

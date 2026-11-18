@@ -1,5 +1,5 @@
 // src/model/transformer_block.cu
-// Phase 5 C7/C8: single GPT-2 transformer block — kernel orchestration.
+// single GPT-2 transformer block — kernel orchestration.
 //
 // Chains the existing sub-kernels exactly as a GPT-2 Pre-LN block:
 //   ln_1  →  c_attn  →  QKV split →  attention  →  c_proj  →  residual
@@ -8,7 +8,7 @@
 // Every Conv1D weight is stored as [K, N] = [in_features, out_features],
 // matching LaunchGemm's B[K,N] convention. No transpose is ever needed.
 //
-// C8: all scratch buffers come from the caller-provided workspace. No
+// all scratch buffers come from the caller-provided workspace. No
 // per-call allocation — the same workspace is reused across all 12 layers.
 
 #include "model/transformer_block.hpp"
@@ -102,7 +102,7 @@ void LaunchTransformerBlock(float* hidden,
   LaunchVectorAdd(hidden, proj_out, hidden, S * D, stream);
 }
 
-// ---- Phase 6a: Prefill (full block + cache population) ----------------------
+// ---- Prefill (full block + cache population) ----------------------
 // Runs the full block identically to LaunchTransformerBlock (all intermediate
 // tensors at S-stride). After the QKV split, copies the per-position K and V
 // vectors from the workspace into the KV cache at n_ctx-stride for future
@@ -198,7 +198,7 @@ void LaunchTransformerBlockPrefill(float* hidden,
   LaunchVectorAdd(hidden, proj_out, hidden, S * D, stream);
 }
 
-// ---- Phase 6a: Decode Step (single position, cached K/V) --------------------
+// ---- Decode Step (single position, cached K/V) --------------------
 // Processes only the new token at absolute position `pos`. Every linear
 // operation runs at S=1. Attention queries the full K_cache[0..pos] and
 // V_cache[0..pos]. The new K/V for position `pos` are computed and appended

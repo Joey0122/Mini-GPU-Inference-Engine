@@ -1,5 +1,5 @@
 // src/kernels/attention.cu
-// Phase 4: causal multi-head scaled-dot-product attention (batch=1).
+// causal multi-head scaled-dot-product attention (batch=1).
 //
 // Dedicated batched kernels; all heads handled in one launch via blockIdx.z.
 // Initial CUDA layout: one block per (head, query
@@ -110,7 +110,7 @@ void LaunchAttentionAV(const float* weights, const float* v, float* out,
 }
 
 // ---- Step 4: integrated attention --------------------------------------------
-// Orchestrates Scores -> Softmax (reused Phase 3 kernel) -> AV. The softmax runs
+// Orchestrates Scores -> Softmax -> AV. The softmax runs
 // over [n_head*S, S] rows; masked entries (kNegInf) become exp(-large)=0, so
 // each row normalizes over exactly its valid (causal) keys.
 void LaunchAttention(const float* q, const float* k, const float* v, float* out,
@@ -123,7 +123,7 @@ void LaunchAttention(const float* q, const float* k, const float* v, float* out,
 }
 
 	// =========================================================================
-	// Phase 6a: KV-cache attention kernels (single-step decode)
+	// KV-cache attention kernels (single-step decode)
 	// =========================================================================
 	//
 	// These kernels compute attention for a SINGLE query position against
@@ -210,49 +210,11 @@ void LaunchAttention(const float* q, const float* k, const float* v, float* out,
 	  AttentionScoresKernelCached<<<grid, block, smem, stream>>>(
 	      q_new, k_cache, scores, n_ctx, num_cached, head_dim, scale);
 
-	  // 2. Softmax: row-wise over [n_head, num_cached] (reuses Phase 3 kernel)
+	  // 2. Softmax: row-wise over [n_head, num_cached]
 	  LaunchSoftmax(scores, weights, n_head, num_cached, SoftmaxVersion::Fused, stream);
 
 	  // 3. AV: weights × V_cache
 	  const int E = n_head * head_dim;
-	  AttentionAVKernelCached<<<grid, block, 0, stream>>>(
-	      weights, v_cache, out, n_ctx, num_cached, head_dim, E);
-	}
-
-	// ---- Phase 6a profiling wrappers ---------------------------------------
-	// Thin wrappers that expose individual cached-attention sub-kernels for
-	// fine-grained wall-clock profiling.  Grid/block config matches internal
-	// calls in LaunchAttentionCached exactly.
-
-	void LaunchAttentionScoresCached(const float* q_new,
-	                                  const float* k_cache,
-	                                  float* scores,
-	                                  int n_head, int n_ctx, int head_dim,
-	                                  int num_cached,
-	                                  cudaStream_t stream) {
-	  if (n_head == 0 || num_cached == 0 || head_dim == 0) return;
-
-	  const float scale = 1.0f / sqrtf(static_cast<float>(head_dim));
-	  const int block = head_dim < 32 ? 32 : head_dim;
-	  const dim3 grid(1, n_head);
-	  const int smem = head_dim * sizeof(float);
-
-	  AttentionScoresKernelCached<<<grid, block, smem, stream>>>(
-	      q_new, k_cache, scores, n_ctx, num_cached, head_dim, scale);
-	}
-
-	void LaunchAttentionAVCached(const float* weights,
-	                              const float* v_cache,
-	                              float* out,
-	                              int n_head, int n_ctx, int head_dim,
-	                              int num_cached,
-	                              cudaStream_t stream) {
-	  if (n_head == 0 || num_cached == 0 || head_dim == 0) return;
-
-	  const int block = head_dim < 32 ? 32 : head_dim;
-	  const dim3 grid(1, n_head);
-	  const int E = n_head * head_dim;
-
 	  AttentionAVKernelCached<<<grid, block, 0, stream>>>(
 	      weights, v_cache, out, n_ctx, num_cached, head_dim, E);
 	}

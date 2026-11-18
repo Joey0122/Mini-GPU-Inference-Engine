@@ -1,6 +1,6 @@
 // include/kernels/qkv_split.hpp
 //
-// Launch interface for the Phase 5 C6 QKV Split kernel.
+// Launch interface for the QKV Split kernel.
 //
 // After the c_attn GEMM + BiasAdd, the output is a [S, 3*n_embd] tensor where
 // the Q, K, V blocks are concatenated column-wise:
@@ -40,7 +40,7 @@ void LaunchQkvSplit(const float* x,
                     int S, int n_embd, int n_head,
                     cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): QKV split routing K and V directly into the cache.
+// QKV split routing K and V directly into the cache.
 //   x        : [S, 3*n_embd]      c_attn output
 //   q        : [n_head, S, head_dim]  Q → workspace (needed immediately for attention)
 //   k_cache  : [n_head, n_ctx, head_dim]  K → cache at positions [pos_offset, pos_offset+S)

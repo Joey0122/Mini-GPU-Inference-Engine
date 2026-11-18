@@ -1,15 +1,6 @@
 // src/kernels/vector_add.cu
 //
-// Phase 0 vector-add kernel + launch wrapper.
-//
-// Proves the CUDA toolchain compiles and runs, and gives the benchmark/test
-// harness a real (if trivial) kernel to exercise. Memory-bound by nature:
-// 2 reads + 1 write per element, 1 add per element. Used in Phase 0 docs as
-// the worked example of bandwidth-limited performance.
-//
-// Kept naive on purpose — Phase 0 does NOT optimize. The optimization
-// methodology (naive -> shared -> warp -> advanced) begins in Phase 1 with
-// reduction.
+// Elementwise addition for residual connections and token embeddings.
 
 #include "kernels/vector_add.hpp"
 

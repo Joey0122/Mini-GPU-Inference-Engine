@@ -1,5 +1,5 @@
 // src/kernels/softmax.cu
-// Phase 3: Softmax — Version A (three-pass) + Version B (fused two-pass).
+// Softmax — Version A (three-pass) + Version B (fused two-pass).
 
 #include "kernels/softmax.hpp"
 #include "common/errors.hpp"

@@ -2,7 +2,7 @@
 //
 // GPT-2 Small (124M) architectural constants.
 //
-// All Phase 5 code takes a Gpt2Config by const-ref so the constants are in one
+// Model functions take Gpt2Config by const-ref so the constants are in one
 // place and easy to audit. DefaultGpt2SmallConfig() is the only configuration
 // this project targets (GPT-2 Small, batch=1).
 //

@@ -1,5 +1,5 @@
 // src/model/workspace.cu
-// C8: workspace allocation factories.
+// workspace allocation factories.
 
 #include "model/workspace.hpp"
 

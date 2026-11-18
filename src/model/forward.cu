@@ -1,15 +1,15 @@
 // src/model/forward.cu
-// Phase 5 C8: full GPT-2 Small forward pass.
+// full GPT-2 Small forward pass.
 //
 // Chains embedding, 12 transformer blocks, final LayerNorm, and LM head into
 // a single call. All intermediate buffers come from the pre-allocated workspace.
 //
 // The forward pass:
-//   hidden = wte[token_ids] + wpe                     (C4 embedding)
+//   hidden = wte[token_ids] + wpe
 //   for i in 0..11:
-//       hidden = transformer_block(hidden, blk[i])    (C7 block, 12×)
-//   hidden = ln_f(hidden)                              (Phase 3 LayerNorm)
-//   logits = hidden @ wte_T                            (Phase 2 GEMM)
+//       hidden = transformer_block(hidden, blk[i])
+//   hidden = ln_f(hidden)
+//   logits = hidden @ wte_T
 
 #include "model/forward.hpp"
 
@@ -59,7 +59,7 @@ void LaunchGpt2Forward(const int* token_ids,
              S, V, D, GemmVersion::RegTiled128Pad, stream);
 }
 
-// ---- Phase 6a: Prefill (full forward + cache population) --------------------
+// ---- Prefill (full forward + cache population) --------------------
 // Same as LaunchGpt2Forward but calls LaunchTransformerBlockPrefill for each
 // layer, populating the KV cache. All intermediate tensors use S-stride layout
 // for the attention computation; K/V are then copied to n_ctx-stride cache.
@@ -102,7 +102,7 @@ void LaunchGpt2Prefill(const int* token_ids,
              S, V, D, GemmVersion::RegTiled128Pad, stream);
 }
 
-// ---- Phase 6a: Decode Step (single position, cached K/V) -------------------
+// ---- Decode Step (single position, cached K/V) -------------------
 // Processes one new token: embedding → 12× decode step → ln_f → lm_head.
 // All linear operations run at S=1 (except attention which queries S_cached keys).
 

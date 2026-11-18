@@ -1,6 +1,6 @@
 // include/model/forward.hpp
 //
-// Full GPT-2 Small (124M) forward pass — C8.
+// Full GPT-2 Small (124M) forward pass.
 //
 // Orchestrates the complete inference pipeline:
 //   1. Embedding:          hidden = wte[token_ids] + wpe
@@ -43,7 +43,7 @@ void LaunchGpt2Forward(const int* token_ids,
                        int S,
                        cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): full forward pass with cache population (prefill).
+// full forward pass with cache population (prefill).
 // Identical to LaunchGpt2Forward, but each transformer block populates the
 // KV cache for future decode steps. kv_cache.num_positions is updated to S.
 void LaunchGpt2Prefill(const int* token_ids,
@@ -55,7 +55,7 @@ void LaunchGpt2Prefill(const int* token_ids,
                        int S,
                        cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): single-position forward step using cached K/V.
+// single-position forward step using cached K/V.
 // Processes one token at absolute position `pos` in [0, n_ctx). The cache
 // must already contain positions [0, pos) and be created with the same cfg.
 // The step overwrites the K/V entry at pos and updates num_positions.

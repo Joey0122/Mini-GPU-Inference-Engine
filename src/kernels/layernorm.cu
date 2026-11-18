@@ -1,5 +1,5 @@
 // src/kernels/layernorm.cu
-// Phase 3: LayerNorm — Version A (two-pass naive) + Version B (Welford).
+// LayerNorm — Version A (two-pass naive) + Version B (Welford).
 
 #include "kernels/layernorm.hpp"
 #include "common/errors.hpp"

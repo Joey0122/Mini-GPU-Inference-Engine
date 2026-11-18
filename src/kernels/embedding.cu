@@ -1,5 +1,5 @@
 // src/kernels/embedding.cu
-// Phase 5 C4: token + positional embedding gather+add kernel.
+// token + positional embedding gather+add kernel.
 //
 // Kernel design:
 //   - 1D grid over sequence positions (blockIdx.x = s)
@@ -9,7 +9,7 @@
 //
 // The wte gather is a scattered read (depends on token_ids[s]); coalescing is
 // poor by construction for this naive kernel. Optimization (reshaped lookups,
-// vectorized loads) is deferred to Phase 6.
+// vectorized loads) is possible.
 
 #include "kernels/embedding.hpp"
 

@@ -1,5 +1,5 @@
 // src/kernels/bias_add.cu
-// Phase 5 C5: row-wise bias addition kernel.
+// row-wise bias addition kernel.
 //
 // Kernel design:
 //   - 1D grid over rows (blockIdx.x = i)

@@ -1,5 +1,5 @@
 // src/model/decode.cu
-// Phase 6a: KV-cache autoregressive decoding (C9 greedy / C10 temperature sampling).
+// KV-cache autoregressive decoding (greedy or temperature sampling).
 //
 // Two-phase decode:
 //   1. Prefill: full forward pass on the prompt tokens, populating the KV cache
@@ -88,7 +88,7 @@ int LaunchSamplingDecode(const int* prompt_ids,
                               prompt_len * sizeof(int),
                               cudaMemcpyDeviceToDevice, stream));
 
-  // --- Phase 1: Prefill ---
+  // --- Prefill ---
   // Full forward pass on the prompt, populating the KV cache for all layers.
   kv_cache.num_positions = 0;
   LaunchGpt2Prefill(output_ids, weights, ws.logits.data(),
@@ -106,7 +106,7 @@ int LaunchSamplingDecode(const int* prompt_ids,
                               cudaMemcpyDeviceToHost, stream));
   CUDA_CHECK(cudaStreamSynchronize(stream));
 
-  // --- Phase 2: Autoregressive Decode ---
+  // --- Autoregressive Decode ---
   for (int step = 0; step < gen_len; ++step) {
     const int cur_pos = prompt_len + step;
 
@@ -138,7 +138,7 @@ int LaunchSamplingDecode(const int* prompt_ids,
   return gen_len;
 }
 
-// C9 greedy decode is just C10 with temperature = 0
+// Greedy decoding uses a temperature of zero.
 int LaunchGreedyDecode(const int* prompt_ids,
                        int* output_ids,
                        const Gpt2Weights& weights,

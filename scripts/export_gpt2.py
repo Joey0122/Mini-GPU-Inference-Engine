@@ -15,7 +15,7 @@ Weight layout notes:
       wte_T = [n_embd, vocab_size] for the tied LM-head GEMM
       (logits = hidden @ wte_T). wte_T is computed here on the host (a simple
       Python .T) and written as a separate tensor. This costs one extra copy of
-      wte (~147 MB) as a deliberate Phase 5 simplicity tradeoff.
+      wte (~147 MB) to keep the load path simple.
     * All tensors are converted to float32, contiguous C-order before writing.
 
 Usage:
@@ -170,87 +170,14 @@ def _verify_transpose(a: np.ndarray, a_T: np.ndarray, name: str) -> None:
           f"({len(checks)} spot-checks passed).")
 
 
-def export_synthetic(out_dir: pathlib.Path, seed: int = 42) -> None:
-    """Generate random GPT-2 Small–shaped weights for loader testing.
-
-    The values are random but the shapes, names, and binary format are
-    identical to the real export. This lets the C++ loader be tested fully
-    (shape validation, round-trip, wte_T consistency) without network access.
-    NOT suitable for actual inference.
-    """
-    rng = np.random.default_rng(seed)
-    n_layer, n_embd, n_head, n_ctx, vocab, mlp = 12, 768, 12, 1024, 50257, 3072
-
-    def rand(*shape: int) -> np.ndarray:
-        return rng.standard_normal(shape).astype(np.float32)
-
-    wte = rand(vocab, n_embd)
-    wte_T = np.ascontiguousarray(wte.T, dtype=np.float32)
-
-    tensors: list[tuple[str, np.ndarray]] = [
-        ("wte",   wte),
-        ("wte_T", wte_T),
-        ("wpe",   rand(n_ctx, n_embd)),
-    ]
-    for i in range(n_layer):
-        p = f"h{i}"
-        tensors += [
-            (f"{p}.ln1.weight",     rand(n_embd)),
-            (f"{p}.ln1.bias",       rand(n_embd)),
-            (f"{p}.c_attn.weight",  rand(n_embd, 3 * n_embd)),
-            (f"{p}.c_attn.bias",    rand(3 * n_embd)),
-            (f"{p}.c_proj.weight",  rand(n_embd, n_embd)),
-            (f"{p}.c_proj.bias",    rand(n_embd)),
-            (f"{p}.ln2.weight",     rand(n_embd)),
-            (f"{p}.ln2.bias",       rand(n_embd)),
-            (f"{p}.mlp_fc.weight",  rand(n_embd, mlp)),
-            (f"{p}.mlp_fc.bias",    rand(mlp)),
-            (f"{p}.mlp_proj.weight", rand(mlp, n_embd)),
-            (f"{p}.mlp_proj.bias",  rand(n_embd)),
-        ]
-    tensors += [("ln_f.weight", rand(n_embd)), ("ln_f.bias", rand(n_embd))]
-
-    out_dir.mkdir(parents=True, exist_ok=True)
-    bin_path = out_dir / "gpt2_weights.bin"
-    manifest_path = out_dir / "gpt2_manifest.txt"
-
-    total_bytes = 0
-    lines = [
-        "# GPT-2 Small weight manifest (SYNTHETIC — random values, not real GPT-2)",
-        "# fmt: name offset_bytes ndim d0 [d1]", "#",
-    ]
-    print(f"Writing synthetic weights to {bin_path} ...")
-    with open(bin_path, "wb") as f:
-        for name, arr in tensors:
-            assert arr.dtype == np.float32 and arr.flags["C_CONTIGUOUS"]
-            lines.append(f"{name} {total_bytes} {arr.ndim} " +
-                         " ".join(str(d) for d in arr.shape))
-            f.write(arr.tobytes())
-            total_bytes += arr.nbytes
-    manifest_path.write_text("\n".join(lines) + "\n")
-    _verify_transpose(wte, wte_T, "wte_T")
-    print(f"Synthetic export complete. {len(tensors)} tensors, "
-          f"{total_bytes / 1e6:.1f} MB.")
-    print("NOTE: these are random values — NOT real GPT-2 weights. "
-          "For inference, run without --synthetic on a machine with internet access.")
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Export GPT-2 weights to flat binary.")
     parser.add_argument("--model", default=MODEL_ID,
                         help=f"Hugging Face model ID or local directory (default: {MODEL_ID})")
     parser.add_argument("--out", default="data/model_weights",
                         help="output directory (default: data/model_weights)")
-    parser.add_argument("--synthetic", action="store_true",
-                        help="generate random weights with correct shapes (no internet "
-                             "needed; for loader testing only, NOT real GPT-2 weights)")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="RNG seed for --synthetic mode (default: 42)")
     args = parser.parse_args()
-    if args.synthetic:
-        export_synthetic(pathlib.Path(args.out), args.seed)
-    else:
-        export(args.model, pathlib.Path(args.out))
+    export(args.model, pathlib.Path(args.out))
     return 0
 
 

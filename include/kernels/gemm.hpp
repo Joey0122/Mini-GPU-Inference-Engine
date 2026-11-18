@@ -1,6 +1,6 @@
 // include/kernels/gemm.hpp
 //
-// Launch interface for the Phase 2 GEMM kernels.
+// Launch interface for the GEMM kernels.
 //
 // Computes C = A * B (row-major, single-precision) in four progressive
 // versions, each kept for benchmarking:
@@ -40,7 +40,7 @@ void LaunchGemm(const float* A, const float* B, float* C,
                 GemmVersion version = GemmVersion::DoubleBuf,
                 cudaStream_t stream = nullptr);
 
-// Phase 6b: Dedicated GEMV for M=1 decode GEMMs.
+// Dedicated GEMV for M=1 decode GEMMs.
 // Computes c[0:N] = a[0:K] * B[K,N]  (row-vector × matrix).
 // A: [K] row-vector device pointer
 // B: K×N row-major device pointer

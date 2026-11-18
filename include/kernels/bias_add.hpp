@@ -1,6 +1,6 @@
 // include/kernels/bias_add.hpp
 //
-// Launch interface for the Phase 5 C5 BiasAdd kernel.
+// Launch interface for the BiasAdd kernel.
 //
 // BiasAdd broadcasts a bias vector across every row of an input tensor:
 //   out[i, d] = x[i, d] + bias[d]

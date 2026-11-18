@@ -1,13 +1,12 @@
 // include/kernels/attention.hpp
 //
-// Launch interface for the Phase 4 GPT-2 attention kernels.
+// Launch interface for the GPT-2 attention kernels.
 //
 // Implements causal multi-head scaled-dot-product attention for batch=1, the
 // mechanism only: input projections (c_attn) and the output projection
-// (c_proj) are Phase 5 GEMMs that operate on loaded weights and are not part of
-// this kernel.
+// (c_proj) are applied separately as GEMMs over loaded weights.
 //
-// Tensor layout (per-head contiguous, matching the Phase-5 reshape):
+// Tensor layout (per-head contiguous):
 //   q, k, v : [n_head, S, head_dim]   row-major device pointers
 //   out     : [S, n_head*head_dim]    row-major; heads concatenated along cols
 //                                      (out[i, h*head_dim + d]) — GPT-2's merged
@@ -19,10 +18,7 @@
 //   1. LaunchAttentionScores : scores = scale * (Q Kᵀ), causal-masked
 //   2. (reuse) LaunchSoftmax : row-wise softmax over [n_head*S, S]
 //   3. LaunchAttentionAV     : out = weights · V, heads merged
-//   4. LaunchAttention       : integrated Q,K,V -> out (owns scratch)
-//
-// cuBLAS/cuDNN are forbidden as the implementation (PROJECT_SPEC); these are
-// hand-written. FlashAttention is out of scope for the clean-first path.
+//   4. LaunchAttention       : integrated Q,K,V -> out using caller-provided scratch
 
 #pragma once
 
@@ -59,7 +55,7 @@ void LaunchAttention(const float* q, const float* k, const float* v, float* out,
                      int n_head, int S, int head_dim,
                      cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): cached attention for single-token decode steps.
+// cached attention for single-token decode steps.
 //   q_new      : [n_head, 1, head_dim]       single query row per head
 //   k_cache, v_cache : [n_head, n_ctx, head_dim]  KV cache for one layer
 //   n_ctx      : stride between heads in the cache (= context width)
@@ -68,7 +64,7 @@ void LaunchAttention(const float* q, const float* k, const float* v, float* out,
 //   scores, weights : caller scratch, each [n_head, num_cached]
 //
 // No causal mask — all num_cached positions are valid keys for the query
-// (the query is at absolute position num_cached; cached keys at 0..num_cached-1).
+// The query is at position num_cached - 1, and the cache includes its key.
 void LaunchAttentionCached(const float* q_new,
                            const float* k_cache,
                            const float* v_cache,
@@ -78,21 +74,5 @@ void LaunchAttentionCached(const float* q_new,
                            int n_head, int n_ctx, int head_dim,
                            int num_cached,
                            cudaStream_t stream = nullptr);
-
-// Phase 6a profiling: individual sub-step wrappers for the cached attention
-// kernels.  These expose the internal kernels for fine-grained timing.
-void LaunchAttentionScoresCached(const float* q_new,
-                                  const float* k_cache,
-                                  float* scores,
-                                  int n_head, int n_ctx, int head_dim,
-                                  int num_cached,
-                                  cudaStream_t stream = nullptr);
-
-void LaunchAttentionAVCached(const float* weights,
-                              const float* v_cache,
-                              float* out,
-                              int n_head, int n_ctx, int head_dim,
-                              int num_cached,
-                              cudaStream_t stream = nullptr);
 
 }  // namespace mgie

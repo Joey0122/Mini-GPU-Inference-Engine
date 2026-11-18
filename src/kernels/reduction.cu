@@ -1,6 +1,6 @@
 // src/kernels/reduction.cu
 //
-// Phase 1 sum-reduction: ReductionWorkspace + two-pass LaunchReduce driver.
+// sum-reduction: ReductionWorkspace + two-pass LaunchReduce driver.
 //
 // See include/kernels/reduction.hpp for the design. Structure shared by all
 // versions:

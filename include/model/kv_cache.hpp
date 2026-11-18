@@ -1,6 +1,6 @@
 // include/model/kv_cache.hpp
 //
-// Phase 6a: KV cache for autoregressive decoding.
+// KV cache for autoregressive decoding.
 //
 // Stores key and value tensors for every transformer layer's attention heads
 // across all sequence positions, avoiding recomputation during decoding.

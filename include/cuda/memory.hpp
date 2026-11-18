@@ -1,15 +1,6 @@
 // include/cuda/memory.hpp
 //
-// RAII device-memory ownership.
-//
-// DeviceBuffer is a small owning wrapper: it allocates on
-// construction, frees on destruction, and is move-only so ownership is always
-// unambiguous. Phase 0 uses it in the vector_add test/benchmark to avoid manual
-// malloc/free pairs.
-//
-// Future role: the runtime allocator (src/runtime/allocator.cu) will build a
-// pooled/arena allocator on top of this for inference-time buffer reuse; this
-// header remains the low-level owning primitive.
+// Move-only CUDA device buffers with RAII allocation and ownership.
 
 #pragma once
 

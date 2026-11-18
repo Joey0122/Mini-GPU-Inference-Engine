@@ -1,5 +1,5 @@
 // src/kernels/gelu.cu
-// Phase 3: NewGELU — 0.5*x*(1+tanh(sqrt(2/pi)*(x+0.044715*x^3)))
+// NewGELU — 0.5*x*(1+tanh(sqrt(2/pi)*(x+0.044715*x^3)))
 // GPT-2 compatible; matches F.gelu(approximate='tanh').
 
 #include "kernels/gelu.hpp"

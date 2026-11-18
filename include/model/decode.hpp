@@ -1,9 +1,9 @@
 // include/model/decode.hpp
 //
-// C9/C10: Greedy and temperature-sampling autoregressive decoding.
+// Greedy and temperature-sampling autoregressive decoding.
 //
-// C9: LaunchGreedyDecode — selects argmax(logits[-1,:]) at each step.
-// C10: LaunchSamplingDecode — applies temperature scaling + softmax + categorical
+// LaunchGreedyDecode — selects argmax(logits[-1,:]) at each step.
+// LaunchSamplingDecode — applies temperature scaling + softmax + categorical
 //   sampling. Temperature ≤ 1e-6 falls back to greedy. Seed controls the
 //   host-side Mersenne Twister RNG deterministically.
 //
@@ -28,7 +28,7 @@
 
 namespace mgie {
 
-// Greedy autoregressive decoding (C9).
+// Greedy autoregressive decoding.
 // Equivalent to LaunchSamplingDecode with temperature = 0.
 int LaunchGreedyDecode(const int* prompt_ids,
                        int* output_ids,
@@ -40,7 +40,7 @@ int LaunchGreedyDecode(const int* prompt_ids,
                        int max_new_tokens,
                        cudaStream_t stream = nullptr);
 
-// Temperature-sampling autoregressive decoding (C10).
+// Temperature-sampling autoregressive decoding.
 //
 // At each step:
 //   logits = forward(token_ids)

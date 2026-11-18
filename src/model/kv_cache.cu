@@ -1,5 +1,5 @@
 // src/model/kv_cache.cu
-// Phase 6a: KV cache allocation factory.
+// KV cache allocation factory.
 
 #include "model/kv_cache.hpp"
 

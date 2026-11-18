@@ -10,7 +10,7 @@
 // existing per-operation kernels (LayerNorm, GEMM, BiasAdd, QkvSplit,
 // Attention, GELU, VectorAdd) in the exact order of a GPT-2 forward pass.
 //
-// C8: all intermediate scratch buffers are caller-provided via the
+// all intermediate scratch buffers are caller-provided via the
 // TransformerBlockWorkspace struct. No cudaMalloc/cudaFree occurs inside
 // the block. The same workspace is reused across all 12 layers.
 //
@@ -49,7 +49,7 @@ void LaunchTransformerBlock(float* hidden,
                             int S,
                             cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): full transformer block with cache population (prefill).
+// full transformer block with cache population (prefill).
 // Identical to LaunchTransformerBlock, but routes K and V directly into the
 // KV cache at positions [0, S) instead of the workspace k/v buffers.
 // layer_idx: which transformer layer this is (0..11).
@@ -62,7 +62,7 @@ void LaunchTransformerBlockPrefill(float* hidden,
                                    int S,
                                    cudaStream_t stream = nullptr);
 
-// Phase 6a (KV cache): single-position decode step using the cached K/V.
+// single-position decode step using the cached K/V.
 // Updates the supplied hidden_row in-place (one row of n_embd floats).
 // K/V at pos are computed fresh and attention reads cache entries [0, pos].
 // layer_idx: which transformer layer (0..11).

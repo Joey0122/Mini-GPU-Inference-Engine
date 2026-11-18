@@ -16,13 +16,6 @@ CMakeFiles/
 cmake_install.cmake
 compile_commands.json
 
-# Benchmark/profiling artifacts (regenerated; keep curated copies under reports/)
-*.csv
-*.ncu-rep
-*.nsys-rep
-*.qdrep
-*.sqlite
-
 # Python
 __pycache__/
 *.pyc
@@ -30,11 +23,17 @@ __pycache__/
 venv/
 .env
 
-# Model weights / large data (downloaded, not committed)
-/data/model_weights/*
-!/data/model_weights/.gitkeep
-/data/test_vectors/**/*.npy
-/data/test_vectors/golden/
+# Downloaded model and local development artifacts
+/data/model_weights/
+/data/test_vectors/
+/benchmarks/
+/reports/
+/tests/
+/scripts/device_query.py
+/scripts/generate_reference.py
+/scripts/golden_test.py
+/scripts/plot_benchmarks.py
+/scripts/validate_kernels.py
 
 # Local development tooling and notes
 /.claude/
