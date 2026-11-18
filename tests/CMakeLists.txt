@@ -36,7 +36,7 @@ add_executable(mgie_unit_tests
   unit/test_kv_cache.cu
 )
 target_link_libraries(mgie_unit_tests PRIVATE
-  mgie_core mgie_test_support gtest gtest_main cublas)
+  mgie_core mgie_test_support gtest gtest_main CUDA::cublas)
 target_compile_definitions(mgie_unit_tests PRIVATE
   MGIE_MODEL_WEIGHTS_DIR="${CMAKE_SOURCE_DIR}/data/model_weights"
   MGIE_GOLDEN_DIR="${CMAKE_SOURCE_DIR}/data/test_vectors/golden")

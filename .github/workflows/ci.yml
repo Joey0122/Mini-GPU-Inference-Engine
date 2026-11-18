@@ -38,10 +38,18 @@ jobs:
           cuda: "12.5.0"
           method: network
 
+      # CUDA 12.5 supports this installed MSVC 19.29 toolset.
+      - name: Set up MSVC x64
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: x64
+          toolset: "14.29"
+
       - name: Configure
         run: >
           cmake -S . -B build -G "Ninja"
           -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CXX_COMPILER=cl.exe
           -DCMAKE_CUDA_ARCHITECTURES=89
           -DMGIE_BUILD_TESTS=ON
           -DMGIE_BUILD_BENCHMARKS=ON
@@ -69,10 +77,18 @@ jobs:
           cuda: "12.5.0"
           method: network
 
+      # CUDA 12.5 supports this installed MSVC 19.29 toolset.
+      - name: Set up MSVC x64
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: x64
+          toolset: "14.29"
+
       - name: Configure
         run: >
           cmake -S . -B build -G "Ninja"
           -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CXX_COMPILER=cl.exe
           -DCMAKE_CUDA_ARCHITECTURES=89
           -DMGIE_BUILD_TESTS=ON
           -DMGIE_BUILD_BENCHMARKS=OFF

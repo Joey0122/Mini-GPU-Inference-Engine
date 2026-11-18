@@ -28,14 +28,14 @@ struct Gpt2Config {
 // HuggingFace as 'gpt2'). Head count 12, hidden dim 768, 12 layers.
 inline Gpt2Config DefaultGpt2SmallConfig() {
     return {
-        .n_layer    = 12,
-        .n_head     = 12,
-        .n_embd     = 768,
-        .head_dim   = 64,     // 768 / 12
-        .n_ctx      = 1024,
-        .vocab_size = 50257,
-        .mlp_inner  = 3072,   // 4 * 768
-        .ln_eps     = 1e-5f,
+        12,     // n_layer
+        12,     // n_head
+        768,    // n_embd
+        64,     // head_dim
+        1024,   // n_ctx
+        50257,  // vocab_size
+        3072,   // mlp_inner
+        1e-5f,  // ln_eps
     };
 }
 

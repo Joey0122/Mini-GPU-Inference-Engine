@@ -21,6 +21,8 @@ project(mini_gpu_inference_engine
   DESCRIPTION "From-scratch CUDA inference engine for GPT-2 Small"
   LANGUAGES CXX CUDA)
 
+find_package(CUDAToolkit REQUIRED)
+
 # ---- Standards -------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -69,7 +71,7 @@ target_include_directories(mgie_core PUBLIC ${CMAKE_SOURCE_DIR}/include)
 set_target_properties(mgie_core PROPERTIES
   CUDA_SEPARABLE_COMPILATION ON
   POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(mgie_core PRIVATE mgie_warnings)
+target_link_libraries(mgie_core PUBLIC CUDA::cudart_static PRIVATE mgie_warnings)
 
 # ---- Executables -----------------------------------------------------------
 add_executable(mgie_app src/main.cpp)

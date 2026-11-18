@@ -32,12 +32,12 @@ target_link_libraries(bench_reduction PRIVATE
 # ---- gemm benchmark (Phase 2) ----------------------------------------
 add_executable(bench_gemm gemm/bench_gemm.cu)
 target_link_libraries(bench_gemm PRIVATE
-  mgie_core mgie_bench_common benchmark::benchmark cublas)
+  mgie_core mgie_bench_common benchmark::benchmark CUDA::cublas)
 
 # ---- decode GEMM comparison (Phase 6b) ----------------------------------
 add_executable(bench_decode_gemm gemm/bench_decode_gemm.cu)
 target_link_libraries(bench_decode_gemm PRIVATE
-  mgie_core cublas)
+  mgie_core CUDA::cublas)
 
 # ---- Phase 3 benchmarks ---------------------------------------------------
 add_executable(bench_layernorm softmax/bench_layernorm.cu)
